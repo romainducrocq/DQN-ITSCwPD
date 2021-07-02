@@ -1,0 +1,16 @@
+<configuration>
+	<input>
+		<net-file value="2tls_3x3x2.net.xml"/>
+		<route-files value="2tls_3x3x2.rou.xml"/>
+		<additional-files value="2tls_3x3x2.tll.xml"/>
+	</input>
+
+	<time>
+			<begin value="0"/>
+	</time>
+
+	<report>
+		<verbose value="true"/>
+		<no-step-log value="true"/>
+	</report>
+</configuration>
