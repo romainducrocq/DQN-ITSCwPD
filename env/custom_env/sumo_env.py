@@ -36,11 +36,6 @@ class SumoEnv:
         exit()
         """
 
-        """
-        self.con_net = self.gen_con_net()
-        pretty_print(self.con_net)
-        """
-
         self.route_net = self.gen_route_net()
         self.o_route_map = self.gen_o_route_map()
         """
@@ -62,8 +57,6 @@ class SumoEnv:
         self.veh_n = 0
         self.steps = SUMO_PARAMS["steps"]
         self.veh_ph = SUMO_PARAMS["veh_ph"]
-        # self.tg = SUMO_PARAMS["tg"]
-        # self.ty = SUMO_PARAMS["ty"]
 
         self.params = self.set_params()
 
@@ -87,17 +80,15 @@ class SumoEnv:
         self.veh_n = self.generate_route_file()
         traci.start(self.params)
 
-    @staticmethod
-    def stop():
+    def stop(self):
         traci.close()
         sys.stdout.flush()
 
     def simulation_reset(self):
-        SumoEnv.stop()
+        self.stop()
         self.start()
 
-    @staticmethod
-    def simulation_step():
+    def simulation_step(self):
         traci.simulationStep()
 
     def reset(self):
@@ -118,73 +109,46 @@ class SumoEnv:
     def info(self):
         raise NotImplementedError
 
-    @staticmethod
-    def is_simulation_end():
+    def is_simulation_end(self):
         return traci.simulation.getMinExpectedNumber() == 0
 
-    @staticmethod
-    def get_current_time():
+    def get_current_time(self):
         return traci.simulation.getCurrentTime() // 1000
 
     # traffic light
 
-    """
-    @staticmethod
-    def set_tl_program(tl_id, program_id):
-        traci.trafficlight.setProgram(tl_id, program_id)
-    """
-
-    @staticmethod
-    def get_phase(tl_id):
+    def get_phase(self, tl_id):
         return traci.trafficlight.getPhase(tl_id)
 
-    @staticmethod
-    def get_ryg_state(tl_id):
+    def get_ryg_state(self, tl_id):
         return traci.trafficlight.getRedYellowGreenState(tl_id)
 
-    @staticmethod
-    def set_phase(tl_id, phase):
+    def set_phase(self, tl_id, phase):
         traci.trafficlight.setPhase(tl_id, phase)
 
-    @staticmethod
-    def set_phase_duration(tl_id, dur):
+    def set_phase_duration(self, tl_id, dur):
         traci.trafficlight.setPhaseDuration(tl_id, dur)
 
     # lane
 
-    @staticmethod
-    def get_lane_veh_ids(lane_id):
+    def get_lane_veh_ids(self, lane_id):
         return traci.lane.getLastStepVehicleIDs(lane_id)
 
-    @staticmethod
-    def get_lane_veh_n(lane_id):
+    def get_lane_veh_n(self, lane_id):
         return traci.lane.getLastStepVehicleNumber(lane_id)
 
-    @staticmethod
-    def get_lane_length(lane_id):
+    def get_lane_length(self, lane_id):
         return traci.lane.getLength(lane_id)
 
-    @staticmethod
-    def get_lane_veh_n_in_dist(lane_id, dist):
-        return sum([1 for veh_id in SumoEnv.get_lane_veh_ids(lane_id)
-                    if (SumoEnv.get_lane_length(lane_id) - SumoEnv.get_veh_pos_on_lane(veh_id)) <= dist])
+    def get_lane_veh_n_in_dist(self, lane_id, dist):
+        return sum([1 for veh_id in self.get_lane_veh_ids(lane_id)
+                    if (self.get_lane_length(lane_id) - self.get_veh_pos_on_lane(veh_id)) <= dist])
 
-    @staticmethod
-    def get_lane_veh_ids_in_dist(lane_id, dist):
-        return [veh_id for veh_id in SumoEnv.get_lane_veh_ids(lane_id)
-                if (SumoEnv.get_lane_length(lane_id) - SumoEnv.get_veh_pos_on_lane(veh_id)) <= dist]
+    def get_lane_veh_ids_in_dist(self, lane_id, dist):
+        return [veh_id for veh_id in self.get_lane_veh_ids(lane_id)
+                if (self.get_lane_length(lane_id) - self.get_veh_pos_on_lane(veh_id)) <= dist]
 
-    """
-    @staticmethod
-    def get_tl_lane_signals(tl_id):
-        return [(l, s) for (l, s) in zip(
-            [l[0][:-1] for l in traci.trafficlight.getControlledLinks(tl_id)],
-            list(traci.trafficlight.getRedYellowGreenState(tl_id))
-        )]
-    """
-
-    @staticmethod
-    def get_tl_lane_green(tl_id):
+    def get_tl_lane_green(self, tl_id):
         return [list(set(t)) for t in zip(*[l for (l, s) in zip(
             [l[0][:-1] for l in traci.trafficlight.getControlledLinks(tl_id)],
             list(traci.trafficlight.getRedYellowGreenState(tl_id))
@@ -192,38 +156,9 @@ class SumoEnv:
 
     # induction loop
 
-    """
-    @staticmethod
-    def get_induction_loop_last_step_vehicle_number(il_id):
-        return traci.inductionloop.getLastStepVehicleNumber(il_id)
-    """
-
-    # edge
-
-    """
-    @staticmethod
-    def get_cars_on_edge(edge_id):
-        try:
-            return traci.edge.getLastStepVehicleIDs(edge_id)
-        except traci.exceptions.TraCIException as e:
-            print(e)
-            return None
-    """
-
     # car
 
-    """
-    @staticmethod
-    def get_car_speed(veh_id):
-        return traci.vehicle.getSpeed(veh_id)
-
-    @staticmethod
-    def get_cars_relative_speed(veh_id1, veh_id2):
-        return traci.vehicle.getSpeed(veh_id1) - traci.vehicle.getSpeed(veh_id2)
-    """
-
-    @staticmethod
-    def get_veh_pos_on_lane(veh_id):
+    def get_veh_pos_on_lane(self, veh_id):
         return traci.vehicle.getLanePosition(veh_id)
 
     # maps & generators
@@ -261,21 +196,15 @@ class SumoEnv:
             [o[1] for o in sorted([(o.getToNode().getID(), o.getID()) for o in self.net.getNode(tl_id).getOutgoing()])]
         )] for tl_id in self.tl_ids}
 
-    """
-    def gen_con_net(self):
-        con = {l: [c.getToLane().getID() for c in self.net.getLane(l).getOutgoing()] for l in self.get_all_incoming_lanes()}
-        
-        
-        # return {l: [c.getToLane().getID() for c in self.net.getLane(l).getOutgoing()] for l in self.get_all_incoming_lanes()}
-    #         return {self.net.getLane(l).getEdge().getID(): [c.getToLane().getEdge().getID() for c in self.net.getLane(l).getOutgoing()] for l in self.get_all_incoming_lanes()}
-    """
-
     def get_next_yellow_phase_id(self, tl_id):
-        return (SumoEnv.get_phase(tl_id) + 1) % self.tl_logic[tl_id]["n"]
+        return (self.get_phase(tl_id) + 1) % self.tl_logic[tl_id]["n"]
+
+    def get_next_red_phase_id(self, tl_id):
+        return (self.get_phase(tl_id) + 2) % self.tl_logic[tl_id]["n"]
 
     def get_next_green_phase_ryg_state(self, tl_id):
         return self.tl_logic[tl_id]["act"][
-            (self.tl_logic[tl_id]["act"].index(SumoEnv.get_ryg_state(tl_id)) + 1) % len(self.tl_logic[tl_id]["act"])
+            (self.tl_logic[tl_id]["act"].index(self.get_ryg_state(tl_id)) + 1) % len(self.tl_logic[tl_id]["act"])
         ]
 
     def get_next_green_phase_id(self, tl_id):
@@ -302,14 +231,14 @@ class SumoEnv:
 
     def get_green_tl_incoming_lanes(self, tl_id):
         try:
-            g_li = [l for l in self.tl_logic[tl_id]["map"][SumoEnv.get_ryg_state(tl_id)]["li"]]
+            g_li = [l for l in self.tl_logic[tl_id]["map"][self.get_ryg_state(tl_id)]["li"]]
         except KeyError:
             g_li = []
         return g_li
 
     def get_green_tl_outgoing_lanes(self, tl_id):
         try:
-            g_lo = [l for l in self.tl_logic[tl_id]["map"][SumoEnv.get_ryg_state(tl_id)]["lo"]]
+            g_lo = [l for l in self.tl_logic[tl_id]["map"][self.get_ryg_state(tl_id)]["lo"]]
         except KeyError:
             g_lo = []
         return g_lo
@@ -326,7 +255,7 @@ class SumoEnv:
                         if "g" in s.lower():
                             tl_logic[tl_id]["act"].append(s)
                             tl_logic[tl_id]["map"][s] = {k: v for (k, v) in zip(
-                                ["li", "lo"], SumoEnv.get_tl_lane_green(tl_id))}
+                                ["li", "lo"], self.get_tl_lane_green(tl_id))}
                             tl_logic[tl_id]["map"][s]["id"] = p
                         tl_logic[tl_id]["n"] += 1
 
@@ -359,14 +288,6 @@ class SumoEnv:
         return o_rou
 
     # flow & rou
-
-    """
-    def flow_distribution(self):
-        return 1. / 2
-
-    def flow_uniform(self, p):
-        return random.uniform(0, 1) < p
-    """
 
     def poisson_flow(self, l):
         t, f = 0, []

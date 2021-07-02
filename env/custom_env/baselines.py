@@ -23,7 +23,7 @@ class BaselineMeta(SumoEnv):
         return 0
 
     def done(self):
-        return SumoEnv.is_simulation_end() or SumoEnv.get_current_time() >= self.steps
+        return self.is_simulation_end() or self.get_current_time() >= self.steps
 
     def info(self):
         raise NotImplementedError
@@ -37,7 +37,7 @@ class UniformBaseline(BaselineMeta):
         self.simulation_reset()
 
     def step(self):
-        SumoEnv.simulation_step()
+        self.simulation_step()
 
     def info(self):
         return {}
@@ -52,13 +52,12 @@ class MaxPressureBaseline(BaselineMeta):
 
         self.scheduler = TlScheduler(self.tg, self.tl_ids)
 
-    @staticmethod
-    def pressure(li, lo):
-        return sum([SumoEnv.get_lane_veh_n(l) for l in li]) - sum([SumoEnv.get_lane_veh_n(l) for l in lo])
+    def pressure(self, li, lo):
+        return sum([self.get_lane_veh_n(l) for l in li]) - sum([self.get_lane_veh_n(l) for l in lo])
 
     def max_pressure(self, tl_id):
         return self.tl_logic[tl_id]["act"][arg_max([
-            MaxPressureBaseline.pressure(
+            self.pressure(
                 self.tl_logic[tl_id]["map"][a]["li"],
                 self.tl_logic[tl_id]["map"][a]["lo"]
             ) for a in self.tl_logic[tl_id]["act"]
@@ -72,25 +71,25 @@ class MaxPressureBaseline(BaselineMeta):
             tl_evt = self.scheduler.pop()
             if tl_evt is not None:
                 break
-            SumoEnv.simulation_step()
+            self.simulation_step()
 
         tl_id, new_p = tl_evt
 
         if new_p is None:
             max_p = self.max_pressure(tl_id)
 
-            if max_p == SumoEnv.get_ryg_state(tl_id):
+            if max_p == self.get_ryg_state(tl_id):
                 t = self.tg
 
             else:
-                SumoEnv.set_phase(tl_id, self.get_next_yellow_phase_id(tl_id))
+                self.set_phase(tl_id, self.get_next_yellow_phase_id(tl_id))
                 t, new_p = self.ty, max_p
 
         else:
-            SumoEnv.set_phase(tl_id, self.get_new_green_phase_id(tl_id, new_p))
+            self.set_phase(tl_id, self.get_new_green_phase_id(tl_id, new_p))
             t, new_p = self.tg, None
 
-        SumoEnv.set_phase_duration(tl_id, t)
+        self.set_phase_duration(tl_id, t)
         self.scheduler.push(t, (tl_id, new_p))
 
     def info(self):
@@ -121,11 +120,11 @@ class SotlBaseline(BaselineMeta):
             tl_evt = self.scheduler.pop()
             if tl_evt is not None:
                 break
-            SumoEnv.simulation_step()
+            self.simulation_step()
 
             for tl_id in self.tl_ids:
                 for l in self.get_red_tl_incoming_lanes(tl_id):
-                    self.kappa[tl_id] += SumoEnv.get_lane_veh_n_in_dist(l, self.r_dist)
+                    self.kappa[tl_id] += self.get_lane_veh_n_in_dist(l, self.r_dist)
 
         tl_id, new_p = tl_evt
 
@@ -137,15 +136,15 @@ class SotlBaseline(BaselineMeta):
 
             else:
                 t, new_p = self.ty, self.get_next_green_phase_ryg_state(tl_id)
-                SumoEnv.set_phase(tl_id, self.get_next_yellow_phase_id(tl_id))
+                self.set_phase(tl_id, self.get_next_yellow_phase_id(tl_id))
 
         else:
-            SumoEnv.set_phase(tl_id, self.get_new_green_phase_id(tl_id, new_p))
+            self.set_phase(tl_id, self.get_new_green_phase_id(tl_id, new_p))
             t, new_p = self.tg, None
 
             self.kappa[tl_id] = 0
 
-        SumoEnv.set_phase_duration(tl_id, t)
+        self.set_phase_duration(tl_id, t)
         self.scheduler.push(t, (tl_id, new_p))
 
     def info(self):
