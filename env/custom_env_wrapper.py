@@ -106,7 +106,7 @@ class CustomEnvWrapper(gym.Env):
 
     def step(self, action):
         # """CHANGE STEP HERE""" #######################################################################################
-        self.sumo_env.step()
+        self.sumo_env.step(action)
         ################################################################################################################
 
         if not self.mode["train"]:

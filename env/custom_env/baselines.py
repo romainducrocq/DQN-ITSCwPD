@@ -13,7 +13,7 @@ class BaselineMeta(SumoEnv):
     def reset(self):
         raise NotImplementedError
 
-    def step(self):
+    def step(self, action):
         raise NotImplementedError
 
     def obs(self):
@@ -36,7 +36,7 @@ class UniformBaseline(BaselineMeta):
     def reset(self):
         self.simulation_reset()
 
-    def step(self):
+    def step(self, action):
         self.simulation_step()
 
     def info(self):
@@ -49,8 +49,9 @@ class MaxPressureBaseline(BaselineMeta):
 
         self.tg = 10
         self.ty = 3
+        self.tr = 2
 
-        self.scheduler = TlScheduler(self.tg, self.tl_ids)
+        self.scheduler = None
 
     def pressure(self, li, lo):
         return sum([self.get_lane_veh_n(l) for l in li]) - sum([self.get_lane_veh_n(l) for l in lo])
@@ -66,31 +67,45 @@ class MaxPressureBaseline(BaselineMeta):
     def reset(self):
         self.simulation_reset()
 
-    def step(self):
-        while True:
-            tl_evt = self.scheduler.pop()
-            if tl_evt is not None:
-                break
+        self.scheduler = TlScheduler(self.tg + self.ty + self.tr, self.tl_ids)
+
+        for _ in range(self.tg):
             self.simulation_step()
 
-        tl_id, new_p = tl_evt
+    def step(self, action):
+        while True:
+            tl_evt = self.scheduler.pop()
 
-        if new_p is None:
-            max_p = self.max_pressure(tl_id)
-
-            if max_p == self.get_ryg_state(tl_id):
-                t = self.tg
+            if tl_evt is None:
+                self.simulation_step()
 
             else:
-                self.set_phase(tl_id, self.get_next_yellow_phase_id(tl_id))
-                t, new_p = self.ty, max_p
+                tl_id, new_p = tl_evt
 
-        else:
-            self.set_phase(tl_id, self.get_new_green_phase_id(tl_id, new_p))
-            t, new_p = self.tg, None
+                if new_p is not None:
+                    p, t = new_p
+                    self.set_phase(tl_id, p)
+                    self.set_phase_duration(tl_id, t)
 
-        self.set_phase_duration(tl_id, t)
-        self.scheduler.push(t, (tl_id, new_p))
+                else:
+                    max_p = self.max_pressure(tl_id)
+
+                    if max_p == self.get_ryg_state(tl_id):
+                        self.scheduler.push(self.tg, (tl_id, None))
+                        self.set_phase_duration(tl_id, self.tg)
+
+                    else:
+                        for evt in [
+                            (self.ty, (tl_id, (self.get_next_red_phase_id(tl_id), self.tr))),
+                            (self.ty + self.tr, (tl_id, (self.get_new_green_phase_id(tl_id, max_p), self.tg))),
+                            (self.ty + self.tr + self.tg, (tl_id, None))
+                        ]:
+                            self.scheduler.push(*evt)
+
+                        self.set_phase(tl_id, self.get_next_yellow_phase_id(tl_id))
+                        self.set_phase_duration(tl_id, self.ty)
+
+                    return
 
     def info(self):
         return {}
@@ -109,43 +124,58 @@ class SotlBaseline(BaselineMeta):
 
         self.tg = 10
         self.ty = 3
+        self.tr = 2
 
-        self.scheduler = TlScheduler(self.tg, self.tl_ids)
+        self.scheduler = None
 
     def reset(self):
         self.simulation_reset()
 
-    def step(self):
-        while True:
-            tl_evt = self.scheduler.pop()
-            if tl_evt is not None:
-                break
+        self.scheduler = TlScheduler(self.tg + self.ty + self.tr, self.tl_ids)
+
+        for _ in range(self.tg):
             self.simulation_step()
 
-            for tl_id in self.tl_ids:
-                for l in self.get_red_tl_incoming_lanes(tl_id):
-                    self.kappa[tl_id] += self.get_lane_veh_n_in_dist(l, self.r_dist)
+    def step(self, action):
+        while True:
+            tl_evt = self.scheduler.pop()
 
-        tl_id, new_p = tl_evt
+            if tl_evt is None:
+                self.simulation_step()
 
-        if new_p is None:
-            n = sum([self.get_lane_veh_n_in_dist(l, self.g_dist) for l in self.get_green_tl_incoming_lanes(tl_id)])
-
-            if 0 < n <= self.mu or self.kappa[tl_id] <= self.theta:
-                t = 1
+                for tl_id in self.tl_ids:
+                    for l in self.get_red_tl_incoming_lanes(tl_id):
+                        self.kappa[tl_id] += self.get_lane_veh_n_in_dist(l, self.r_dist)
 
             else:
-                t, new_p = self.ty, self.get_next_green_phase_ryg_state(tl_id)
-                self.set_phase(tl_id, self.get_next_yellow_phase_id(tl_id))
+                tl_id, new_p = tl_evt
 
-        else:
-            self.set_phase(tl_id, self.get_new_green_phase_id(tl_id, new_p))
-            t, new_p = self.tg, None
+                if new_p is not None:
+                    p, t = new_p
+                    self.set_phase(tl_id, p)
+                    self.set_phase_duration(tl_id, t)
 
-            self.kappa[tl_id] = 0
+                    self.kappa[tl_id] = 0
 
-        self.set_phase_duration(tl_id, t)
-        self.scheduler.push(t, (tl_id, new_p))
+                else:
+                    n = sum([self.get_lane_veh_n_in_dist(l, self.g_dist) for l in self.get_green_tl_incoming_lanes(tl_id)])
+
+                    if 0 < n <= self.mu or self.kappa[tl_id] <= self.theta:
+                        self.scheduler.push(self.tg, (tl_id, None))
+                        self.set_phase_duration(tl_id, 1)
+
+                    else:
+                        for evt in [
+                            (self.ty, (tl_id, (self.get_next_red_phase_id(tl_id), self.tr))),
+                            (self.ty + self.tr, (tl_id, (self.get_new_green_phase_id(tl_id, self.get_next_green_phase_ryg_state(tl_id)), self.tg))),
+                            (self.ty + self.tr + self.tg, (tl_id, None))
+                        ]:
+                            self.scheduler.push(*evt)
+
+                        self.set_phase(tl_id, self.get_next_yellow_phase_id(tl_id))
+                        self.set_phase_duration(tl_id, self.ty)
+
+                    return
 
     def info(self):
         return {}
