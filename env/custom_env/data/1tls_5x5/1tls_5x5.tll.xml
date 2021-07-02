@@ -2,11 +2,15 @@
     <tlLogic id="gneJ6" type="static" programID="1" offset="0">
         <phase duration="33" state="GGGGrrrrrrrrGGGGrrrrrrrr"/>
         <phase duration="3"  state="yyyyrrrrrrrryyyyrrrrrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrrGGrrrrrrrrrrGGrrrrrr"/>
         <phase duration="3"  state="rrrryyrrrrrrrrrryyrrrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrrrrrrrrrr"/>
         <phase duration="33" state="rrrrrrGGGGrrrrrrrrGGGGrr"/>
         <phase duration="3"  state="rrrrrryyyyrrrrrrrryyyyrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrrrrrrrrGGrrrrrrrrrrGG"/>
         <phase duration="3"  state="rrrrrrrrrryyrrrrrrrrrryy"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrrrrrrrrrr"/>
     </tlLogic>
 </additional>

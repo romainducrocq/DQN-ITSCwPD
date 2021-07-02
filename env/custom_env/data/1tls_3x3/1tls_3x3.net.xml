@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2021-06-23 11:11:26 by Eclipse SUMO netedit Version UNKNOWN
+<!-- generated on 2021-07-02 11:04:24 by Eclipse SUMO netedit Version UNKNOWN
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="env/custom_env/data/3x3_1tls/3x3_1tls.net.xml"/>
+        <sumo-net-file value="1tls_3x3/1tls_3x3.net.xml"/>
     </input>
 
     <output>
-        <output-file value="env/custom_env/data/3x3_1tls/3x3_1tls.net.xml"/>
+        <output-file value="1tls_3x3/1tls_3x3.net.xml"/>
     </output>
 
     <processing>
@@ -125,12 +125,16 @@
     <tlLogic id="gneJ0" type="static" programID="0" offset="0">
         <phase duration="33" state="GGGrrrrrGGGrrrrr"/>
         <phase duration="3"  state="yyyrrrrryyyrrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrGrrrrrrrGrrrr"/>
         <phase duration="3"  state="rrryrrrrrrryrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
         <phase duration="33" state="rrrrGGGrrrrrGGGr"/>
         <phase duration="3"  state="rrrryyyrrrrryyyr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrrrrrGrrrrrrrG"/>
         <phase duration="3"  state="rrrrrrryrrrrrrry"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
     </tlLogic>
 
     <junction id="gneJ0" type="traffic_light" x="0.00" y="0.00" incLanes="-gneE0_0 -gneE0_1 -gneE0_2 -gneE1_0 -gneE1_1 -gneE1_2 -gneE2_0 -gneE2_1 -gneE2_2 -gneE3_0 -gneE3_1 -gneE3_2" intLanes=":gneJ0_0_0 :gneJ0_1_0 :gneJ0_1_1 :gneJ0_3_0 :gneJ0_4_0 :gneJ0_5_0 :gneJ0_5_1 :gneJ0_7_0 :gneJ0_8_0 :gneJ0_9_0 :gneJ0_9_1 :gneJ0_11_0 :gneJ0_12_0 :gneJ0_13_0 :gneJ0_13_1 :gneJ0_15_0" shape="-9.60,13.60 9.60,13.60 10.04,11.38 10.60,10.60 11.38,10.04 12.38,9.71 13.60,9.60 13.60,-9.60 11.38,-10.04 10.60,-10.60 10.04,-11.38 9.71,-12.38 9.60,-13.60 -9.60,-13.60 -10.04,-11.38 -10.60,-10.60 -11.38,-10.04 -12.38,-9.71 -13.60,-9.60 -13.60,9.60 -11.38,10.04 -10.60,10.60 -10.04,11.38 -9.71,12.38">

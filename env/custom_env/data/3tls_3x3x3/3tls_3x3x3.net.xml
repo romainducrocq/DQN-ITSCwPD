@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2021-06-23 15:40:58 by Eclipse SUMO netedit Version UNKNOWN
+<!-- generated on 2021-07-02 11:15:52 by Eclipse SUMO netedit Version UNKNOWN
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
+    <input>
+        <sumo-net-file value="3tls_3x3x3/3tls_3x3x3.net.xml"/>
+    </input>
+
     <output>
-        <output-file value="/home/romain/Documents/code/dqn/atsc-dqn/env/custom_env/data/3tls_3x3x3/3tls_3x3x3.net.xml"/>
+        <output-file value="3tls_3x3x3/3tls_3x3x3.net.xml"/>
     </output>
 
     <processing>
+        <geometry.min-radius.fix.railways value="false"/>
+        <geometry.max-grade.fix value="false"/>
         <offset.disable-normalization value="true"/>
+        <lefthand value="false"/>
     </processing>
 
     <junctions>
         <no-turnarounds value="true"/>
+        <junctions.corner-detail value="5"/>
+        <junctions.limit-turn-speed value="5.5"/>
+        <rectangular-lane-cut value="false"/>
     </junctions>
+
+    <pedestrian>
+        <walkingareas value="false"/>
+    </pedestrian>
 
     <report>
         <aggregate-warnings value="5"/>
@@ -24,7 +38,7 @@
 
 <net version="1.9" junctionCornerDetail="5" limitTurnSpeed="5.50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
 
-    <location netOffset="0.00,0.00" convBoundary="-600.00,-300.00,600.00,300.00" origBoundary="10000000000.00,10000000000.00,-10000000000.00,-10000000000.00" projParameter="!"/>
+    <location netOffset="0.00,0.00" convBoundary="-600.00,-300.00,600.00,300.00" origBoundary="-10000000000.00,-10000000000.00,10000000000.00,10000000000.00" projParameter="!"/>
 
     <edge id=":gneJ1_0" function="internal">
         <lane id=":gneJ1_0_0" index="0" speed="6.51" length="9.03" shape="-308.00,13.60 -308.35,11.15 -309.40,9.40 -311.15,8.35 -313.60,8.00"/>
@@ -254,32 +268,44 @@
     <tlLogic id="gneJ1" type="static" programID="0" offset="0">
         <phase duration="33" state="GGGrrrrrGGGrrrrr"/>
         <phase duration="3"  state="yyyrrrrryyyrrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrGrrrrrrrGrrrr"/>
         <phase duration="3"  state="rrryrrrrrrryrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
         <phase duration="33" state="rrrrGGGrrrrrGGGr"/>
         <phase duration="3"  state="rrrryyyrrrrryyyr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrrrrrGrrrrrrrG"/>
         <phase duration="3"  state="rrrrrrryrrrrrrry"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
     </tlLogic>
     <tlLogic id="gneJ4" type="static" programID="0" offset="0">
         <phase duration="33" state="GGGrrrrrGGGrrrrr"/>
         <phase duration="3"  state="yyyrrrrryyyrrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrGrrrrrrrGrrrr"/>
         <phase duration="3"  state="rrryrrrrrrryrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
         <phase duration="33" state="rrrrGGGrrrrrGGGr"/>
         <phase duration="3"  state="rrrryyyrrrrryyyr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrrrrrGrrrrrrrG"/>
         <phase duration="3"  state="rrrrrrryrrrrrrry"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
     </tlLogic>
     <tlLogic id="gneJ7" type="static" programID="0" offset="0">
         <phase duration="33" state="GGGrrrrrGGGrrrrr"/>
         <phase duration="3"  state="yyyrrrrryyyrrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrGrrrrrrrGrrrr"/>
         <phase duration="3"  state="rrryrrrrrrryrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
         <phase duration="33" state="rrrrGGGrrrrrGGGr"/>
         <phase duration="3"  state="rrrryyyrrrrryyyr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrrrrrGrrrrrrrG"/>
         <phase duration="3"  state="rrrrrrryrrrrrrry"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrr"/>
     </tlLogic>
 
     <junction id="gneJ0" type="dead_end" x="-600.00" y="0.00" incLanes="-gneE0_0 -gneE0_1 -gneE0_2" intLanes="" shape="-600.00,0.00 -600.00,9.60 -600.00,0.00"/>

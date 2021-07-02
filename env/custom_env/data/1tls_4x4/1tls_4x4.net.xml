@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2021-06-23 13:13:36 by Eclipse SUMO netedit Version UNKNOWN
+<!-- generated on 2021-07-02 11:06:27 by Eclipse SUMO netedit Version UNKNOWN
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
+    <input>
+        <sumo-net-file value="1tls_4x4/1tls_4x4.net.xml"/>
+    </input>
+
     <output>
-        <output-file value="/home/romain/Documents/code/dqn/atsc-dqn/env/custom_env/data/4x4_1tls/4x4_1tls.net.xml"/>
+        <output-file value="1tls_4x4/1tls_4x4.net.xml"/>
     </output>
 
     <processing>
+        <geometry.min-radius.fix.railways value="false"/>
+        <geometry.max-grade.fix value="false"/>
         <offset.disable-normalization value="true"/>
+        <lefthand value="false"/>
     </processing>
 
     <junctions>
         <no-turnarounds value="true"/>
+        <junctions.corner-detail value="5"/>
+        <junctions.limit-turn-speed value="5.5"/>
+        <rectangular-lane-cut value="false"/>
     </junctions>
+
+    <pedestrian>
+        <walkingareas value="false"/>
+    </pedestrian>
 
     <report>
         <aggregate-warnings value="5"/>
@@ -24,7 +38,7 @@
 
 <net version="1.9" junctionCornerDetail="5" limitTurnSpeed="5.50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
 
-    <location netOffset="0.00,0.00" convBoundary="-300.00,-300.00,300.00,300.00" origBoundary="10000000000.00,10000000000.00,-10000000000.00,-10000000000.00" projParameter="!"/>
+    <location netOffset="0.00,0.00" convBoundary="-300.00,-300.00,300.00,300.00" origBoundary="-10000000000.00,-10000000000.00,10000000000.00,10000000000.00" projParameter="!"/>
 
     <edge id=":gneJ0_0" function="internal">
         <lane id=":gneJ0_0_0" index="0" speed="6.51" length="9.03" shape="-11.20,16.80 -11.55,14.35 -12.60,12.60 -14.35,11.55 -16.80,11.20"/>
@@ -123,12 +137,16 @@
     <tlLogic id="gneJ0" type="static" programID="0" offset="0">
         <phase duration="33" state="GGGGrrrrrrGGGGrrrrrr"/>
         <phase duration="3"  state="yyyyrrrrrryyyyrrrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrrGrrrrrrrrrGrrrrr"/>
         <phase duration="3"  state="rrrryrrrrrrrrryrrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrrrrrr"/>
         <phase duration="33" state="rrrrrGGGGrrrrrrGGGGr"/>
         <phase duration="3"  state="rrrrryyyyrrrrrryyyyr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrrrrrrrGrrrrrrrrrG"/>
         <phase duration="3"  state="rrrrrrrrryrrrrrrrrry"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrrrrrr"/>
     </tlLogic>
 
     <junction id="gneJ0" type="traffic_light" x="0.00" y="0.00" incLanes="-gneE0_0 -gneE0_1 -gneE0_2 -gneE0_3 -gneE1_0 -gneE1_1 -gneE1_2 -gneE1_3 -gneE2_0 -gneE2_1 -gneE2_2 -gneE2_3 -gneE3_0 -gneE3_1 -gneE3_2 -gneE3_3" intLanes=":gneJ0_0_0 :gneJ0_1_0 :gneJ0_1_1 :gneJ0_1_2 :gneJ0_4_0 :gneJ0_5_0 :gneJ0_6_0 :gneJ0_6_1 :gneJ0_6_2 :gneJ0_9_0 :gneJ0_10_0 :gneJ0_11_0 :gneJ0_11_1 :gneJ0_11_2 :gneJ0_14_0 :gneJ0_15_0 :gneJ0_16_0 :gneJ0_16_1 :gneJ0_16_2 :gneJ0_19_0" shape="-12.80,16.80 12.80,16.80 13.24,14.58 13.80,13.80 14.58,13.24 15.58,12.91 16.80,12.80 16.80,-12.80 14.58,-13.24 13.80,-13.80 13.24,-14.58 12.91,-15.58 12.80,-16.80 -12.80,-16.80 -13.24,-14.58 -13.80,-13.80 -14.58,-13.24 -15.58,-12.91 -16.80,-12.80 -16.80,12.80 -14.58,13.24 -13.80,13.80 -13.24,14.58 -12.91,15.58">

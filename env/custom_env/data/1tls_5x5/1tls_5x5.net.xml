@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2021-06-23 14:39:05 by Eclipse SUMO netedit Version UNKNOWN
+<!-- generated on 2021-07-02 11:08:26 by Eclipse SUMO netedit Version UNKNOWN
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="1tls_5x5.net.xml"/>
+        <sumo-net-file value="1tls_5x5/1tls_5x5.net.xml"/>
     </input>
 
     <output>
-        <output-file value="1tls_5x5.net.xml"/>
+        <output-file value="1tls_5x5/1tls_5x5.net.xml"/>
     </output>
 
     <processing>
@@ -141,12 +141,16 @@
     <tlLogic id="gneJ6" type="static" programID="0" offset="0">
         <phase duration="33" state="GGGGrrrrrrrrGGGGrrrrrrrr"/>
         <phase duration="3"  state="yyyyrrrrrrrryyyyrrrrrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrrGGrrrrrrrrrrGGrrrrrr"/>
         <phase duration="3"  state="rrrryyrrrrrrrrrryyrrrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrrrrrrrrrr"/>
         <phase duration="33" state="rrrrrrGGGGrrrrrrrrGGGGrr"/>
         <phase duration="3"  state="rrrrrryyyyrrrrrrrryyyyrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrrrrrrrrGGrrrrrrrrrrGG"/>
         <phase duration="3"  state="rrrrrrrrrryyrrrrrrrrrryy"/>
+        <phase duration="2"  state="rrrrrrrrrrrrrrrrrrrrrrrr"/>
     </tlLogic>
 
     <junction id="gneJ5" type="dead_end" x="0.00" y="300.00" incLanes="-gneE4_0 -gneE4_1 -gneE4_2" intLanes="" shape="0.00,300.00 9.60,300.00 0.00,300.00"/>

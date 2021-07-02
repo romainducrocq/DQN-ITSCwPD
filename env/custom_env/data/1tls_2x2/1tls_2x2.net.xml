@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2021-06-23 14:00:49 by Eclipse SUMO netedit Version UNKNOWN
+<!-- generated on 2021-07-02 11:02:16 by Eclipse SUMO netedit Version UNKNOWN
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
+    <input>
+        <sumo-net-file value="env/custom_env/data/1tls_2x2/1tls_2x2.net.xml"/>
+    </input>
+
     <output>
-        <output-file value="/home/romain/Documents/code/dqn/atsc-dqn/env/custom_env/data/1tls_2x2/1tls_2x2.net.xml"/>
+        <output-file value="env/custom_env/data/1tls_2x2/1tls_2x2.net.xml"/>
     </output>
 
     <processing>
+        <geometry.min-radius.fix.railways value="false"/>
+        <geometry.max-grade.fix value="false"/>
         <offset.disable-normalization value="true"/>
+        <lefthand value="false"/>
     </processing>
 
     <junctions>
         <no-turnarounds value="true"/>
+        <junctions.corner-detail value="5"/>
+        <junctions.limit-turn-speed value="5.5"/>
+        <rectangular-lane-cut value="false"/>
     </junctions>
+
+    <pedestrian>
+        <walkingareas value="false"/>
+    </pedestrian>
 
     <report>
         <aggregate-warnings value="5"/>
@@ -24,7 +38,7 @@
 
 <net version="1.9" junctionCornerDetail="5" limitTurnSpeed="5.50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
 
-    <location netOffset="0.00,0.00" convBoundary="-300.00,-300.00,300.00,300.00" origBoundary="10000000000.00,10000000000.00,-10000000000.00,-10000000000.00" projParameter="!"/>
+    <location netOffset="0.00,0.00" convBoundary="-300.00,-300.00,300.00,300.00" origBoundary="-10000000000.00,-10000000000.00,10000000000.00,10000000000.00" projParameter="!"/>
 
     <edge id=":gneJ1_0" function="internal">
         <lane id=":gneJ1_0_0" index="0" speed="7.33" length="11.73" shape="-4.80,10.40 -5.15,6.55 -6.20,3.80 -7.95,2.15 -10.40,1.60"/>
@@ -99,12 +113,16 @@
     <tlLogic id="gneJ1" type="static" programID="0" offset="0">
         <phase duration="33" state="GGrrrrGGrrrr"/>
         <phase duration="3"  state="yyrrrryyrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrr"/>
         <phase duration="6"  state="rrGrrrrrGrrr"/>
         <phase duration="3"  state="rryrrrrryrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrr"/>
         <phase duration="33" state="rrrGGrrrrGGr"/>
         <phase duration="3"  state="rrryyrrrryyr"/>
+        <phase duration="2"  state="rrrrrrrrrrrr"/>
         <phase duration="6"  state="rrrrrGrrrrrG"/>
         <phase duration="3"  state="rrrrryrrrrry"/>
+        <phase duration="2"  state="rrrrrrrrrrrr"/>
     </tlLogic>
 
     <junction id="gneJ0" type="dead_end" x="0.00" y="300.00" incLanes="-gneE0_0 -gneE0_1" intLanes="" shape="0.00,300.00 6.40,300.00 0.00,300.00"/>
