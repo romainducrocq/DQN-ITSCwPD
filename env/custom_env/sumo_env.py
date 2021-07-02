@@ -283,7 +283,7 @@ class SumoEnv:
 
         for rou in self.route_net:
             if self.route_net[rou][0] not in flow:
-                flow[self.route_net[rou][0]] = {"out": {}, "lam": 0., "pro": 0., "veh": 0}
+                flow[self.route_net[rou][0]] = {"out": {}, "con": 0, "lam": 0., "pro": 0., "veh": 0}
             if self.route_net[rou][1] not in flow[self.route_net[rou][0]]["out"]:
                 flow[self.route_net[rou][0]]["out"][self.route_net[rou][1]] = \
                     {"rou": [], "con": 0, "lam": 0., "pro": 0., "veh": 0}
@@ -301,6 +301,7 @@ class SumoEnv:
             c = dict(list(set([(o, c.count(o)) for o in c])))
             for o in sorted([o for o in c]):
                 flow[e]["out"][o]["con"] = c[o]
+                flow[e]["con"] += c[o]
 
         return flow
 
@@ -320,11 +321,7 @@ class SumoEnv:
             self.flow_log[e]["veh"] = len(fi)
             random.shuffle(fi)
 
-            k = sorted([0., 1.] + [
-                random.uniform(0, 1) for _ in
-                range(sum([self.flow_log[e]["out"][o]["con"] for o in self.flow_log[e]["out"]]) - 1)
-            ])
-
+            k = sorted([0., 1.] + [random.uniform(0, 1) for _ in range(self.flow_log[e]["con"] - 1)])
             p = [a - b for a, b in zip(k[1:], k[:-1])]
 
             for o in self.flow_log[e]["out"]:
