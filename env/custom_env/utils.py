@@ -17,10 +17,10 @@ SUMO_PARAMS = {
     "delay": 0,
     "gui": True,
 
-    "config": CONFIGS[1],
+    "config": CONFIGS[3],
     "veh_ph": 2000,
-    "tg": 5,
-    "ty": 3
+
+    "veh_co_p": 0.8
 }
 
 

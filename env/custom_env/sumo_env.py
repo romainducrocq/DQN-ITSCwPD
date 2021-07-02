@@ -23,8 +23,10 @@ class SumoEnv:
     SUMO_ENV = "./env/custom_env/"
 
     def __init__(self, gui=False):
+        self.args = SUMO_PARAMS
+
         self.gui = False
-        self.config = SUMO_PARAMS["config"]
+        self.config = self.args["config"]
         self.data_dir = self.SUMO_ENV + "data/" + self.config + "/"
 
         self.net = net.readNet(self.data_dir + self.config + ".net.xml")
@@ -37,12 +39,20 @@ class SumoEnv:
         """
 
         self.route_net = self.gen_route_net()
-        self.o_route_map = self.gen_o_route_map()
+        self.flow_log = self.gen_flow_logic()
+        self.flow = []
         """
         pretty_print(self.route_net)
-        pretty_print(self.o_route_map)
+        pretty_print(self.flow_log)
         exit()
         """
+
+        self.update_flow_logic()
+        """"""
+        pretty_print(self.flow_log)
+        # [print(f) for f in self.flow]
+        exit()
+        """"""
 
         _ = self.generate_route_file(gen=False)
         traci.start(self.set_params())
@@ -55,8 +65,8 @@ class SumoEnv:
 
         self.gui = gui
         self.veh_n = 0
-        self.steps = SUMO_PARAMS["steps"]
-        self.veh_ph = SUMO_PARAMS["veh_ph"]
+        self.steps = self.args["steps"]
+        self.veh_ph = self.args["veh_ph"]
 
         self.params = self.set_params()
 
@@ -69,7 +79,7 @@ class SumoEnv:
 
         if self.gui:
             params += [
-                "--delay", str(SUMO_PARAMS["delay"]),
+                "--delay", str(self.args["delay"]),
                 "--start", "true", "--quit-on-end", "true",
                 "--gui-settings-file", self.SUMO_ENV + "data/" + self.config + "/gui-settings.cfg"
             ]
@@ -268,24 +278,75 @@ class SumoEnv:
                 list(permutations([n for n in [node.getID() for node in self.net.getNodes()] if n not in self.tl_ids], 2))
                 ]]}
 
-    def gen_o_route_map(self):
-        o_con = {e: [] for e in list(set([self.route_net[rou][0] for rou in self.route_net]))}
+    def gen_flow_logic(self):
+        flow = {}
+
+        for rou in self.route_net:
+            if self.route_net[rou][0] not in flow:
+                flow[self.route_net[rou][0]] = {"out": {}, "lam": 0., "pro": 0., "veh": 0}
+            if self.route_net[rou][1] not in flow[self.route_net[rou][0]]["out"]:
+                flow[self.route_net[rou][0]]["out"][self.route_net[rou][1]] = \
+                    {"rou": [], "con": 0, "lam": 0., "pro": 0., "veh": 0}
+            flow[self.route_net[rou][0]]["out"][self.route_net[rou][1]]["rou"].append(rou)
+
+        con = {e: [] for e in flow}
 
         for l in self.get_all_incoming_lanes():
             e = self.net.getLane(l).getEdge().getID()
-            if e in o_con:
-                o_con[e].append([c.getToLane().getEdge().getID() for c in self.net.getLane(l).getOutgoing()])
+            if e in con:
+                con[e].append([c.getToLane().getEdge().getID() for c in self.net.getLane(l).getOutgoing()])
 
-        o_rou = {e: [[] for _ in range(len(o_con[e]))] for e in [e for e in o_con]}
+        for e in con:
+            c = [item for sublist in con[e] for item in sublist]
+            c = dict(list(set([(o, c.count(o)) for o in c])))
+            for o in sorted([o for o in c]):
+                flow[e]["out"][o]["con"] = c[o]
 
-        for rou in self.route_net:
-            for e0 in o_con:
-                for l in range(len(o_con[e0])):
-                    for e1 in o_con[e0][l]:
-                        if e0 == self.route_net[rou][0] and e1 == self.route_net[rou][1]:
-                            o_rou[e0][l].append(rou)
+        return flow
 
-        return o_rou
+    def update_flow_logic(self):
+        self.flow = []
+
+        lambdas = [(1 / random.uniform(0.1, 0.2)) for _ in self.flow_log]
+
+        for i, e in enumerate(sorted([e for e in self.flow_log])):
+            self.flow_log[e]["lam"] = lambdas[i]
+
+            t, fi = 0, []
+            while t < self.args["steps"]:
+                fi.append(t)
+                t += np.random.poisson(self.flow_log[e]["lam"])
+
+            self.flow_log[e]["veh"] = len(fi)
+            random.shuffle(fi)
+
+            k = sorted([0., 1.] + [
+                random.uniform(0, 1) for _ in
+                range(sum([self.flow_log[e]["out"][o]["con"] for o in self.flow_log[e]["out"]]) - 1)
+            ])
+
+            p = [a - b for a, b in zip(k[1:], k[:-1])]
+
+            for o in self.flow_log[e]["out"]:
+                self.flow_log[e]["out"][o]["pro"] = sum([p.pop() for _ in range(self.flow_log[e]["out"][o]["con"])])
+                self.flow_log[e]["out"][o]["lam"] = self.flow_log[e]["lam"] * self.flow_log[e]["out"][o]["pro"]
+
+                fo = [(fi.pop(), random.choice(self.flow_log[e]["out"][o]["rou"]), False)
+                      for _ in range(min([round(self.flow_log[e]["veh"] * self.flow_log[e]["out"][o]["pro"]), len(fi)]))]
+                self.flow_log[e]["out"][o]["veh"] = len(fo)
+
+                self.flow += fo
+
+            self.flow_log[e]["veh"] = sum([self.flow_log[e]["out"][o]["veh"] for o in self.flow_log[e]["out"]])
+
+        v = sum([self.flow_log[e]["veh"] for e in self.flow_log])
+        for e in self.flow_log:
+            self.flow_log[e]["pro"] = self.flow_log[e]["veh"] / v
+
+        for n in random.sample(list(range(v)), round(v * self.args["veh_co_p"])):
+            self.flow[n] = self.flow[n][:-1] + (True,)
+
+        self.flow = sorted(self.flow)
 
     # flow & rou
 
