@@ -13,20 +13,18 @@ CONFIGS = [
 ]
 
 SUMO_PARAMS = {
+    "config": CONFIGS[3],
+
     "steps": 3600,
     "delay": 0,
     "gui": True,
 
-    "config": CONFIGS[3],
-    "veh_ph": 2000,
+    "v_type_con": "con",
+    "v_type_def": "def",
 
-    "veh_co_p": 0.8
+    "veh_co_p": 0.3
 }
 
 
 def pretty_print(d):
     print(json.dumps(d, sort_keys=True, indent=4))
-
-
-def arg_max(_list):
-    return max(range(len(_list)), key=lambda i: _list[i])

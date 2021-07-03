@@ -1,6 +1,5 @@
 from .utils import \
-    pretty_print, \
-    arg_max
+    pretty_print
 
 from .tl_scheduler import TlScheduler
 from .sumo_env import SumoEnv
@@ -23,7 +22,7 @@ class BaselineMeta(SumoEnv):
         return 0
 
     def done(self):
-        return self.is_simulation_end() or self.get_current_time() >= self.steps
+        return self.is_simulation_end() or self.get_current_time() >= self.args["steps"]
 
     def info(self):
         raise NotImplementedError
@@ -56,8 +55,11 @@ class MaxPressureBaseline(BaselineMeta):
     def pressure(self, li, lo):
         return sum([self.get_lane_veh_n(l) for l in li]) - sum([self.get_lane_veh_n(l) for l in lo])
 
+    def arg_max(self, _list):
+        return max(range(len(_list)), key=lambda i: _list[i])
+
     def max_pressure(self, tl_id):
-        return self.tl_logic[tl_id]["act"][arg_max([
+        return self.tl_logic[tl_id]["act"][self.arg_max([
             self.pressure(
                 self.tl_logic[tl_id]["map"][a]["li"],
                 self.tl_logic[tl_id]["map"][a]["lo"]

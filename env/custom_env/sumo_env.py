@@ -39,22 +39,12 @@ class SumoEnv:
         """
 
         self.route_net = self.gen_route_net()
-        self.flow_log = self.gen_flow_logic()
-        self.flow = []
         """
         pretty_print(self.route_net)
-        pretty_print(self.flow_log)
         exit()
         """
 
-        self.update_flow_logic()
-        """"""
-        pretty_print(self.flow_log)
-        # [print(f) for f in self.flow]
-        exit()
-        """"""
-
-        _ = self.generate_route_file(gen=False)
+        self.generate_route_file(gen=False)
         traci.start(self.set_params())
 
         self.tl_logic = self.gen_tl_logic()
@@ -63,10 +53,17 @@ class SumoEnv:
         exit()
         """
 
+        self.flow_logic = self.gen_flow_logic()
+        self.flow = []
+        """
+        self.update_flow_logic()
+        pretty_print(self.flow_logic)
+        # [print(f) for f in self.flow]
+        exit()
+        """
+
         self.gui = gui
         self.veh_n = 0
-        self.steps = self.args["steps"]
-        self.veh_ph = self.args["veh_ph"]
 
         self.params = self.set_params()
 
@@ -86,8 +83,11 @@ class SumoEnv:
 
         return params
 
+    ####################################################################################################################
+    ####################################################################################################################
+
     def start(self):
-        self.veh_n = self.generate_route_file()
+        self.generate_route_file()
         traci.start(self.params)
 
     def stop(self):
@@ -125,6 +125,9 @@ class SumoEnv:
     def get_current_time(self):
         return traci.simulation.getCurrentTime() // 1000
 
+    ####################################################################################################################
+    ####################################################################################################################
+
     # traffic light
 
     def get_phase(self, tl_id):
@@ -158,20 +161,47 @@ class SumoEnv:
         return [veh_id for veh_id in self.get_lane_veh_ids(lane_id)
                 if (self.get_lane_length(lane_id) - self.get_veh_pos_on_lane(veh_id)) <= dist]
 
+    def get_tl_lane_signals(self, tl_id):
+        return [(l, s) for (l, s) in zip(
+            [l[0][:-1] for l in traci.trafficlight.getControlledLinks(tl_id)],
+            list(traci.trafficlight.getRedYellowGreenState(tl_id))
+        )]
+
     def get_tl_lane_green(self, tl_id):
         return [list(set(t)) for t in zip(*[l for (l, s) in zip(
             [l[0][:-1] for l in traci.trafficlight.getControlledLinks(tl_id)],
             list(traci.trafficlight.getRedYellowGreenState(tl_id))
         ) if s.lower() == "g"])]
 
-    # induction loop
+    def get_lane_edge_id(self, lane_id):
+        return traci.lane.getEdgeID(lane_id)
+
+    # edge
+
+    def get_edge_veh_ids(self, edge_id):
+        return traci.edge.getLastStepVehicleIDs(edge_id)
 
     # car
+
+    def get_veh_type(self, veh_id):
+        return traci.vehicle.getTypeID(veh_id)
+
+    def get_veh_speed(self, veh_id):
+        return traci.vehicle.getSpeed(veh_id)
+
+    def get_veh_lane(self, veh_id):
+        return traci.vehicle.getLaneID(veh_id)
 
     def get_veh_pos_on_lane(self, veh_id):
         return traci.vehicle.getLanePosition(veh_id)
 
-    # maps & generators
+    def get_veh_dist_from_junction(self, veh_id):
+        return self.get_lane_length(self.get_veh_lane(veh_id)) - self.get_veh_pos_on_lane(veh_id)
+
+    ####################################################################################################################
+    ####################################################################################################################
+
+    # tl logic
 
     def get_tl_incoming_edges(self, tl_id):
         return [edge["i"]["e"] for edge in self.tl_net[tl_id]]
@@ -271,6 +301,11 @@ class SumoEnv:
 
         return tl_logic
 
+    ####################################################################################################################
+    ####################################################################################################################
+
+    # rou & flow logic
+
     def gen_route_net(self):
         return {"".join(r): r for r in [
             [e.getID() for e in self.net.getShortestPath(oe, de)[0]] for (oe, de) in [
@@ -305,101 +340,97 @@ class SumoEnv:
 
         return flow
 
+    def lambda_veh_p_second(self, veh_p_s):
+        return 1 / veh_p_s
+
+    def lambda_veh_p_hour(self, veh_p_h):
+        return 3600 / veh_p_h
+
+    def insert_lambdas(self):
+        return random.choice([
+            [self.lambda_veh_p_second(random.uniform(0.1, 0.2)) for _ in self.flow_logic],
+            [self.lambda_veh_p_hour(random.randint(4, 20) * 100) for _ in self.flow_logic],
+            [self.lambda_veh_p_hour(random.choice([600, 1200])) for _ in self.flow_logic]
+        ])
+
     def update_flow_logic(self):
         self.flow = []
 
-        lambdas = [(1 / random.uniform(0.1, 0.2)) for _ in self.flow_log]
+        """"""  # TODO
+        lambdas = self.insert_lambdas()
+        """"""
 
-        for i, e in enumerate(sorted([e for e in self.flow_log])):
-            self.flow_log[e]["lam"] = lambdas[i]
+        for i, e in enumerate(sorted([e for e in self.flow_logic])):
+            self.flow_logic[e]["lam"] = lambdas[i]
 
             t, fi = 0, []
             while t < self.args["steps"]:
                 fi.append(t)
-                t += np.random.poisson(self.flow_log[e]["lam"])
+                t += np.random.poisson(self.flow_logic[e]["lam"])
 
-            self.flow_log[e]["veh"] = len(fi)
+            self.flow_logic[e]["veh"] = len(fi)
             random.shuffle(fi)
 
-            k = sorted([0., 1.] + [random.uniform(0, 1) for _ in range(self.flow_log[e]["con"] - 1)])
+            k = sorted([0., 1.] + [random.uniform(0, 1) for _ in range(self.flow_logic[e]["con"] - 1)])
             p = [a - b for a, b in zip(k[1:], k[:-1])]
 
-            for o in self.flow_log[e]["out"]:
-                self.flow_log[e]["out"][o]["pro"] = sum([p.pop() for _ in range(self.flow_log[e]["out"][o]["con"])])
-                self.flow_log[e]["out"][o]["lam"] = self.flow_log[e]["lam"] * self.flow_log[e]["out"][o]["pro"]
+            for o in self.flow_logic[e]["out"]:
+                self.flow_logic[e]["out"][o]["pro"] = sum([p.pop() for _ in range(self.flow_logic[e]["out"][o]["con"])])
+                self.flow_logic[e]["out"][o]["lam"] = self.flow_logic[e]["lam"] * self.flow_logic[e]["out"][o]["pro"]
 
-                fo = [(fi.pop(), random.choice(self.flow_log[e]["out"][o]["rou"]), False)
-                      for _ in range(min([round(self.flow_log[e]["veh"] * self.flow_log[e]["out"][o]["pro"]), len(fi)]))]
-                self.flow_log[e]["out"][o]["veh"] = len(fo)
+                fo = [(fi.pop(), random.choice(self.flow_logic[e]["out"][o]["rou"]), False)
+                      for _ in range(min([round(self.flow_logic[e]["veh"] * self.flow_logic[e]["out"][o]["pro"]), len(fi)]))]
+                self.flow_logic[e]["out"][o]["veh"] = len(fo)
 
                 self.flow += fo
 
-            self.flow_log[e]["veh"] = sum([self.flow_log[e]["out"][o]["veh"] for o in self.flow_log[e]["out"]])
+            self.flow_logic[e]["veh"] = sum([self.flow_logic[e]["out"][o]["veh"] for o in self.flow_logic[e]["out"]])
 
-        v = sum([self.flow_log[e]["veh"] for e in self.flow_log])
-        for e in self.flow_log:
-            self.flow_log[e]["pro"] = self.flow_log[e]["veh"] / v
+        v = sum([self.flow_logic[e]["veh"] for e in self.flow_logic])
+        for e in self.flow_logic:
+            self.flow_logic[e]["pro"] = self.flow_logic[e]["veh"] / v
 
         for n in random.sample(list(range(v)), round(v * self.args["veh_co_p"])):
             self.flow[n] = self.flow[n][:-1] + (True,)
 
         self.flow = sorted(self.flow)
 
-    # flow & rou
-
-    def poisson_flow(self, l):
-        t, f = 0, []
-        while t < self.steps:
-            f.append(t)
-            t += np.random.poisson(l)
-
-        return f
-
-    def get_flow_dist(self):
-        return list(zip(
-            sorted([random.uniform(0, 1) * 100 for _ in range(len(self.o_route_map) - 1)] + [100.]),
-            [o for o in self.o_route_map]
-        ))
-
-    def get_o_dist(self, flow_dist):
-        p = random.uniform(0, 1) * 100
-        for f, o in flow_dist:
-            if p <= f:
-                return o
-
-    def get_rou_dist(self, o=None):
-        if o is None:
-            o = random.choice([o for o in self.o_route_map])
-        return random.choice(random.choice(self.o_route_map[o]))
-
-    def get_flow_l(self):
-        return 3600 / self.veh_ph
-
-    def gen_rou_flow(self):
-        flow_dist = self.get_flow_dist()
-        for t in self.poisson_flow(self.get_flow_l()):
-            yield t, self.get_rou_dist(o=self.get_o_dist(flow_dist))
-
     def generate_route_file(self, gen=True):
         with open(self.data_dir + self.config + ".rou.xml", "w") as f:
             print('<routes>', file=f)
             print('', file=f)
 
-            print('    <vType id="veh" accel="0.8" decel="4.5" sigma="0.5" length="5" minGap="2.5" maxSpeed="16.67" guiShape="passenger" />', file=f)
+            print(f'    <vType id="{self.args["v_type_def"]}" ' +
+                  'accel="0.8" decel="4.5" sigma="0.5" length="5" minGap="2.5" maxSpeed="16.67" guiShape="passenger" />'
+                  , file=f)
+            print(f'    <vType id="{self.args["v_type_con"]}" ' +
+                  'accel="0.8" decel="4.5" sigma="0.5" length="5" minGap="2.5" maxSpeed="16.67" guiShape="passenger" />'
+                  , file=f)
             print('', file=f)
 
             for rou in self.route_net:
                 print(f'    <route id="{rou}" edges="{" ".join(self.route_net[rou])}" />', file=f)
             print('', file=f)
 
-            veh_n = 0
             if gen:
-                for t, rou in self.gen_rou_flow():
-                    # rou = random.choice([r for r in self.route_net])
-                    print(f'    <vehicle id="{rou}_{veh_n}" type="veh" route="{rou}" depart="{t}" />', file=f)
-                    veh_n += 1
+                self.veh_n = 0
+                self.update_flow_logic()
+                for t, rou, co in self.flow:
+                    self.veh_n += 1
+                    v_type = self.args["v_type_con"] if co else self.args["v_type_def"]
+                    print(f'    <vehicle id="{rou}_{self.veh_n}" type="{v_type}" route="{rou}" depart="{t}" />', file=f)
                 print('', file=f)
 
             print('</routes>', file=f)
 
-            return veh_n
+    ####################################################################################################################
+    ####################################################################################################################
+
+    # Connected vehicles
+
+    def is_veh_con(self, veh_id):
+        return self.get_veh_type(veh_id) == self.args["v_type_con"]
+
+    def get_veh_con_on_edge(self, edge_id):
+        return [veh_id for veh_id in self.get_edge_veh_ids(edge_id) if self.is_veh_con(veh_id)]
+
