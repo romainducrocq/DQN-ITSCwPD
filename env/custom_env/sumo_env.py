@@ -347,11 +347,14 @@ class SumoEnv:
         return 3600 / veh_p_h
 
     def insert_lambdas(self):
+        return [self.lambda_veh_p_hour(random.randint(1, 10) * 100) for _ in self.flow_logic]
+        """
         return random.choice([
             [self.lambda_veh_p_second(random.uniform(0.1, 0.2)) for _ in self.flow_logic],
             [self.lambda_veh_p_hour(random.randint(4, 20) * 100) for _ in self.flow_logic],
             [self.lambda_veh_p_hour(random.choice([600, 1200])) for _ in self.flow_logic]
         ])
+        """
 
     def update_flow_logic(self):
         self.flow = []

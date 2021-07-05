@@ -13,7 +13,7 @@ CONFIGS = [
 ]
 
 SUMO_PARAMS = {
-    "config": CONFIGS[3],
+    "config": CONFIGS[2],
 
     "steps": 3600,
     "delay": 0,
