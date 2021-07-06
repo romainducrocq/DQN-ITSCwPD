@@ -1,8 +1,5 @@
-from .utils import \
-    pretty_print
-
 from .tl_scheduler import TlScheduler
-from .sumo_env import SumoEnv
+from .sumo_env import SumoEnv, pretty_print
 
 
 class RLController(SumoEnv):

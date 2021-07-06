@@ -3,10 +3,10 @@
 from __future__ import absolute_import, print_function
 
 from .utils import \
-    SUMO_PARAMS, \
-    pretty_print
+    SUMO_PARAMS
 
 import sys
+import json
 import random
 import numpy as np
 from itertools import permutations
@@ -17,6 +17,10 @@ sys.path.append(SUMO_HOME + 'tools')
 
 from sumolib import net  # noqa
 import traci  # noqa
+
+
+def pretty_print(d):
+    print(json.dumps(d, sort_keys=True, indent=4))
 
 
 class SumoEnv:

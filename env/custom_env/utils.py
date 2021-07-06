@@ -1,5 +1,3 @@
-import json
-
 CONFIGS_SIMPLE = [
     "1tls_2x2",
     "1tls_3x3",
@@ -30,7 +28,3 @@ SUMO_PARAMS = {
 
     "veh_co_p": 0.3
 }
-
-
-def pretty_print(d):
-    print(json.dumps(d, sort_keys=True, indent=4))
