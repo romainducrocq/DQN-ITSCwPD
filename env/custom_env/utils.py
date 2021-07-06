@@ -26,5 +26,6 @@ SUMO_PARAMS = {
     "v_min_gap": 2.5,
     "v_max_speed": 16.67,
 
-    "veh_co_p": 0.3
+    "con_penetration_rate": 0.3,
+    "con_max_distance": 150
 }

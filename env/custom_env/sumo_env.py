@@ -38,13 +38,13 @@ class SumoEnv:
 
         self.tl_net = self.gen_tl_net()
         """
-        pretty_print(self.tl_net)
+        SumoEnv.pretty_print(self.tl_net)
         exit()
         """
 
         self.route_net = self.gen_route_net()
         """
-        pretty_print(self.route_net)
+        SumoEnv.pretty_print(self.route_net)
         exit()
         """
 
@@ -53,7 +53,7 @@ class SumoEnv:
 
         self.tl_logic = self.gen_tl_logic()
         """
-        pretty_print(self.tl_logic)
+        SumoEnv.pretty_print(self.tl_logic)
         exit()
         """
 
@@ -61,7 +61,7 @@ class SumoEnv:
         self.flow = []
         """
         self.update_flow_logic()
-        pretty_print(self.flow_logic)
+        SumoEnv.pretty_print(self.flow_logic)
         # [print(f) for f in self.flow]
         exit()
         """
@@ -365,6 +365,7 @@ class SumoEnv:
 
         """"""  # TODO
         lambdas = self.insert_lambdas()
+        print([3600 / l for l in lambdas])
         """"""
 
         for i, e in enumerate(sorted([e for e in self.flow_logic])):
@@ -397,7 +398,7 @@ class SumoEnv:
         for e in self.flow_logic:
             self.flow_logic[e]["pro"] = self.flow_logic[e]["veh"] / v
 
-        for n in random.sample(list(range(v)), round(v * self.args["veh_co_p"])):
+        for n in random.sample(list(range(v)), round(v * self.args["con_penetration_rate"])):
             self.flow[n] = self.flow[n][:-1] + (True,)
 
         self.flow = sorted(self.flow)
@@ -440,4 +441,3 @@ class SumoEnv:
 
     def get_veh_con_on_edge(self, edge_id):
         return [veh_id for veh_id in self.get_edge_veh_ids(edge_id) if self.is_veh_con(veh_id)]
-
