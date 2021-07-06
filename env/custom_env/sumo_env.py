@@ -19,12 +19,12 @@ from sumolib import net  # noqa
 import traci  # noqa
 
 
-def pretty_print(d):
-    print(json.dumps(d, sort_keys=True, indent=4))
-
-
 class SumoEnv:
     SUMO_ENV = "./env/custom_env/"
+
+    @staticmethod
+    def pretty_print(d):
+        print(json.dumps(d, sort_keys=True, indent=4))
 
     def __init__(self, gui=False):
         self.args = SUMO_PARAMS

@@ -1,5 +1,5 @@
 from .tl_scheduler import TlScheduler
-from .sumo_env import SumoEnv, pretty_print
+from .sumo_env import SumoEnv
 
 
 class BaselineMeta(SumoEnv):
