@@ -24,6 +24,9 @@ SUMO_PARAMS = {
 
     "v_type_def": "def",
     "v_type_con": "con",
+    "v_length": 5,
+    "v_min_gap": 2.5,
+    "v_max_speed": 16.67,
 
     "veh_co_p": 0.3
 }

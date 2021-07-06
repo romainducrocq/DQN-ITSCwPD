@@ -403,12 +403,12 @@ class SumoEnv:
             print('<routes>', file=f)
             print('', file=f)
 
-            print(f'    <vType id="{self.args["v_type_def"]}" ' +
-                  'accel="0.8" decel="4.5" sigma="0.5" length="5" minGap="2.5" maxSpeed="16.67" guiShape="passenger" />'
-                  , file=f)
-            print(f'    <vType id="{self.args["v_type_con"]}" ' +
-                  'accel="0.8" decel="4.5" sigma="0.5" length="5" minGap="2.5" maxSpeed="16.67" guiShape="passenger" />'
-                  , file=f)
+            print(f'    <vType id="{self.args["v_type_def"]}" accel="0.8" decel="4.5" sigma="0.5"' +
+                  f' length="{self.args["v_length"]}" minGap="{self.args["v_min_gap"]}"' +
+                  f' maxSpeed="{self.args["v_max_speed"]}" guiShape="passenger" />', file=f)
+            print(f'    <vType id="{self.args["v_type_con"]}" accel="0.8" decel="4.5" sigma="0.5"' +
+                  f' length="{self.args["v_length"]}" minGap="{self.args["v_min_gap"]}"' +
+                  f' maxSpeed="{self.args["v_max_speed"]}" guiShape="passenger" />', file=f)
             print('', file=f)
 
             for rou in self.route_net:
