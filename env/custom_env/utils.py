@@ -1,10 +1,13 @@
 import json
 
-CONFIGS = [
+CONFIGS_SIMPLE = [
     "1tls_2x2",
     "1tls_3x3",
     "1tls_4x4",
-    "1tls_5x5",
+    "1tls_5x5"
+]
+
+CONFIGS_MULTI = [
     "2tls_3x3x2",
     "3tls_2x2x3",
     "3tls_3x3x3",
@@ -13,7 +16,7 @@ CONFIGS = [
 ]
 
 SUMO_PARAMS = {
-    "config": CONFIGS[0],
+    "config": CONFIGS_SIMPLE[0],
 
     "steps": 3600,
     "delay": 0,
