@@ -13,14 +13,14 @@ CONFIGS = [
 ]
 
 SUMO_PARAMS = {
-    "config": CONFIGS[2],
+    "config": CONFIGS[0],
 
     "steps": 3600,
     "delay": 0,
     "gui": True,
 
-    "v_type_con": "con",
     "v_type_def": "def",
+    "v_type_con": "con",
 
     "veh_co_p": 0.3
 }

@@ -1,5 +1,5 @@
 # """CHANGE CUSTOM ENV IMPORT HERE""" ##################################################################################
-from .custom_env import SUMO_PARAMS, Baselines
+from .custom_env import SUMO_PARAMS, Baselines, RLController
 ########################################################################################################################
 
 import gym
@@ -23,7 +23,10 @@ class CustomEnvWrapper(gym.Env):
         self.total_reward = 0.
 
         # """CHANGE ENV CONSTRUCT HERE""" ##############################################################################
-        self.sumo_env = getattr(Baselines, p)(gui=SUMO_PARAMS["gui"])
+        if p is None:
+            self.sumo_env = RLController()
+        else:
+            self.sumo_env = getattr(Baselines, p)(gui=SUMO_PARAMS["gui"])
         ################################################################################################################
 
         # """CHANGE FEATURE SCALING HERE""" ############################################################################
@@ -32,8 +35,8 @@ class CustomEnvWrapper(gym.Env):
         ################################################################################################################
 
         # """CHANGE ACTION AND OBSERVATION SPACE SIZES HERE""" #########################################################
-        action_space_n = 1
-        observation_space_n = 1
+        action_space_n = self.sumo_env.action_space_n
+        observation_space_n = self.sumo_env.observation_space_n
         ################################################################################################################
 
         if "reward" not in self.lim_features:
