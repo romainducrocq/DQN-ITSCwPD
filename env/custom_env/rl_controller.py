@@ -29,6 +29,7 @@ class RLController(SumoEnv):
 
     def step(self, action):
         tl_id = self.next_tl_id
+
         if self.tl_ids[tl_id]["act"][action] == self.get_ryg_state(tl_id):
             self.scheduler.push(self.tg, (tl_id, None))
             self.set_phase_duration(tl_id, self.tg)
