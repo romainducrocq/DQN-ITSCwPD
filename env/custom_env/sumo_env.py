@@ -26,6 +26,18 @@ class SumoEnv:
     def pretty_print(d):
         print(json.dumps(d, sort_keys=True, indent=4))
 
+    @staticmethod
+    def arg_max(_list):
+        return max(range(len(_list)), key=lambda i: _list[i])
+
+    @staticmethod
+    def arg_min(_list):
+        return min(range(len(_list)), key=lambda i: _list[i])
+
+    @staticmethod
+    def clip(min_clip, max_clip, x):
+        return max(min_clip, min([max_clip, x])) if min_clip < max_clip else x
+
     def __init__(self, gui=False):
         self.args = SUMO_PARAMS
 
@@ -185,6 +197,9 @@ class SumoEnv:
     def get_edge_veh_ids(self, edge_id):
         return traci.edge.getLastStepVehicleIDs(edge_id)
 
+    def get_edge_lane_n(self, edge_id):
+        return traci.edge.getLaneNumber(edge_id)
+
     # car
 
     def get_veh_type(self, veh_id):
@@ -192,6 +207,9 @@ class SumoEnv:
 
     def get_veh_speed(self, veh_id):
         return traci.vehicle.getSpeed(veh_id)
+
+    def get_veh_waiting_time(self, veh_id):
+        return traci.vehicle.getWaitingTime(veh_id)
 
     def get_veh_lane(self, veh_id):
         return traci.vehicle.getLaneID(veh_id)
@@ -206,6 +224,13 @@ class SumoEnv:
     ####################################################################################################################
 
     # tl logic
+
+    def get_tl_edge_lanes(self, tl_id, edge_id):
+        for edge in self.tl_net[tl_id]:
+            for io in ["i", "o"]:
+                if edge[io]["e"] == edge_id:
+                    return edge[io]["l"]
+        return []
 
     def get_tl_incoming_edges(self, tl_id):
         return [edge["i"]["e"] for edge in self.tl_net[tl_id]]
@@ -364,7 +389,7 @@ class SumoEnv:
         self.flow = []
 
         """"""  # TODO
-        lambdas = self.insert_lambdas()
+        lambdas = [3600 / 2000 for _ in range(4)]# self.insert_lambdas()
         print([3600 / l for l in lambdas])
         """"""
 
@@ -436,8 +461,23 @@ class SumoEnv:
 
     # Connected vehicles
 
+    def get_con_p(self):
+        return self.args["con_penetration_rate"]
+
+    def get_veh_box(self):
+        return self.args["v_min_gap"] + self.args["v_length"]
+
+    def get_veh_max_speed(self):
+        return self.args["v_max_speed"]
+
+    def get_veh_con_range(self):
+        return self.args["con_range"]
+
     def is_veh_con(self, veh_id):
         return self.get_veh_type(veh_id) == self.args["v_type_con"]
 
     def get_veh_con_on_edge(self, edge_id):
         return [veh_id for veh_id in self.get_edge_veh_ids(edge_id) if self.is_veh_con(veh_id)]
+
+    def get_veh_delay_norm(self, veh_id):
+        return 1 - (self.get_veh_speed(veh_id) / self.get_veh_max_speed())

@@ -2,7 +2,7 @@
 
 function run () {
 
-python3 play.py -player SotlBaseline
+python3 play.py -player tmp
 
 }
 

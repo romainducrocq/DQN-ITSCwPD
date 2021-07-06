@@ -23,8 +23,8 @@ class CustomEnvWrapper(gym.Env):
         self.total_reward = 0.
 
         # """CHANGE ENV CONSTRUCT HERE""" ##############################################################################
-        if p is None:
-            self.sumo_env = RLController()
+        if p == "tmp":
+            self.sumo_env = RLController(gui=True)
         else:
             self.sumo_env = getattr(Baselines, p)(gui=SUMO_PARAMS["gui"])
         ################################################################################################################

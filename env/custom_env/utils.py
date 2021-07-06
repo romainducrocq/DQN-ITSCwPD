@@ -25,7 +25,8 @@ SUMO_PARAMS = {
     "v_length": 5,
     "v_min_gap": 2.5,
     "v_max_speed": 16.67,
+    "v_max_waiting_time": 240,
 
-    "con_penetration_rate": 0.3,
-    "con_max_distance": 150
+    "con_penetration_rate": 0.1,
+    "con_range": 150
 }
