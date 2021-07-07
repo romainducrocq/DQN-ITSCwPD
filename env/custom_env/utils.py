@@ -14,7 +14,7 @@ CONFIGS_MULTI = [
 ]
 
 SUMO_PARAMS = {
-    "config": CONFIGS_SIMPLE[2],
+    "config": CONFIGS_SIMPLE[1],
 
     "steps": 3600,
     "delay": 0,

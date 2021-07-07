@@ -2,6 +2,7 @@ from .tl_scheduler import TlScheduler
 from .sumo_env import SumoEnv
 
 import random
+from collections import deque
 
 
 class RLController(SumoEnv):
@@ -11,6 +12,10 @@ class RLController(SumoEnv):
         self.tg = 10
         self.ty = 3
         self.tr = 2
+
+        self.sum_delays = deque(maxlen=2)
+        for _ in range(self.sum_delays.maxlen):
+            self.sum_delays.append(1e-3)
 
         self.scheduler, self.next_tl_id = None, None
 
@@ -70,21 +75,17 @@ class RLController(SumoEnv):
     def rew(self):
         tl_id = self.next_tl_id
 
-        sum_delay, max_n_veh = 0, 0
+        self.sum_delays.append(self.get_sum_delay_veh_con(tl_id))
 
-        for (l, get_veh_dist) in (
-                [(l, self.get_veh_dist_from_junction) for l in self.get_tl_incoming_lanes(tl_id)] +
-                [(l, self.get_veh_pos_on_lane) for l in self.get_tl_outgoing_lanes(tl_id)]
-        ):
-            max_n_veh += int(min(self.get_veh_con_range(), self.get_lane_length(l)) / self.get_veh_box())
+        rew = - (self.sum_delays[1] - self.sum_delays[0]) / self.sum_delays[0]
 
-            for v in self.get_lane_veh_ids(l):
-                if self.is_veh_con(v) and get_veh_dist(v) <= self.get_veh_con_range():
-                    sum_delay += self.get_veh_delay_norm(v)
-
-        rew = 1 - SumoEnv.clip(0, 1, sum_delay / (max_n_veh * self.get_con_p()))
+        rew = SumoEnv.clip(0, 1, rew + 0.5)
 
         print(rew)
+
+        # rew2 = self.sum_delays[0] - self.sum_delays[1]
+        # print(rew, rew2)
+
         return rew
 
     def done(self):
@@ -92,3 +93,51 @@ class RLController(SumoEnv):
 
     def info(self):
         return {}
+
+    ####################################################################################################################
+    ####################################################################################################################
+
+    # Connected vehicles
+
+    def get_con_p(self):
+        return self.args["con_penetration_rate"]
+
+    def get_veh_box(self):
+        return self.args["v_min_gap"] + self.args["v_length"]
+
+    def get_veh_max_speed(self):
+        return self.args["v_max_speed"]
+
+    def get_veh_con_range(self):
+        return self.args["con_range"]
+
+    def is_veh_con(self, veh_id):
+        return self.get_veh_type(veh_id) == self.args["v_type_con"]
+
+    def get_veh_con_on_edge(self, edge_id):
+        return [veh_id for veh_id in self.get_edge_veh_ids(edge_id) if self.is_veh_con(veh_id)]
+
+    def get_veh_delay(self, veh_id):
+        return 1 - (self.get_veh_speed(veh_id) / self.get_veh_max_speed())
+
+    """
+    def get_sum_delay(self, tl_id):
+        sum_delay = 1e-3
+
+        for l in self.get_tl_incoming_lanes(tl_id):
+            for v in self.get_lane_veh_ids(l):
+                if self.get_veh_dist_from_junction(v) <= self.get_veh_con_range():
+                    sum_delay += self.get_veh_delay(v)
+
+        return sum_delay
+    """
+
+    def get_sum_delay_veh_con(self, tl_id):
+        sum_delay = 1e-3
+
+        for l in self.get_tl_incoming_lanes(tl_id):
+            for v in self.get_lane_veh_ids(l):
+                if self.is_veh_con(v) and self.get_veh_dist_from_junction(v) <= self.get_veh_con_range():
+                    sum_delay += self.get_veh_delay(v)
+
+        return sum_delay

@@ -455,29 +455,3 @@ class SumoEnv:
                 print('', file=f)
 
             print('</routes>', file=f)
-
-    ####################################################################################################################
-    ####################################################################################################################
-
-    # Connected vehicles
-
-    def get_con_p(self):
-        return self.args["con_penetration_rate"]
-
-    def get_veh_box(self):
-        return self.args["v_min_gap"] + self.args["v_length"]
-
-    def get_veh_max_speed(self):
-        return self.args["v_max_speed"]
-
-    def get_veh_con_range(self):
-        return self.args["con_range"]
-
-    def is_veh_con(self, veh_id):
-        return self.get_veh_type(veh_id) == self.args["v_type_con"]
-
-    def get_veh_con_on_edge(self, edge_id):
-        return [veh_id for veh_id in self.get_edge_veh_ids(edge_id) if self.is_veh_con(veh_id)]
-
-    def get_veh_delay_norm(self, veh_id):
-        return 1 - (self.get_veh_speed(veh_id) / self.get_veh_max_speed())
