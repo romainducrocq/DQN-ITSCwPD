@@ -13,9 +13,7 @@ class RLController(SumoEnv):
         self.ty = 3
         self.tr = 2
 
-        self.sum_delays = deque(maxlen=2)
-        for _ in range(self.sum_delays.maxlen):
-            self.sum_delays.append(1e-3)
+        self.rew_min = 0
 
         self.scheduler, self.next_tl_id = None, None
 
@@ -75,16 +73,13 @@ class RLController(SumoEnv):
     def rew(self):
         tl_id = self.next_tl_id
 
-        self.sum_delays.append(self.get_sum_delay_veh_con(tl_id))
+        sum_delay = self.get_sum_delay(tl_id)
 
-        rew = - (self.sum_delays[1] - self.sum_delays[0]) / self.sum_delays[0]
+        self.rew_min = min([self.rew_min, -sum_delay])
 
-        rew = SumoEnv.clip(0, 1, rew + 0.5)
+        rew = 0 if self.rew_min == 0 else 1 + sum_delay / self.rew_min
 
-        print(rew)
-
-        # rew2 = self.sum_delays[0] - self.sum_delays[1]
-        # print(rew, rew2)
+        print(rew, self.rew_min, -sum_delay)
 
         return rew
 
@@ -120,9 +115,8 @@ class RLController(SumoEnv):
     def get_veh_delay(self, veh_id):
         return 1 - (self.get_veh_speed(veh_id) / self.get_veh_max_speed())
 
-    """
     def get_sum_delay(self, tl_id):
-        sum_delay = 1e-3
+        sum_delay = 0
 
         for l in self.get_tl_incoming_lanes(tl_id):
             for v in self.get_lane_veh_ids(l):
@@ -130,8 +124,8 @@ class RLController(SumoEnv):
                     sum_delay += self.get_veh_delay(v)
 
         return sum_delay
-    """
 
+    """
     def get_sum_delay_veh_con(self, tl_id):
         sum_delay = 1e-3
 
@@ -141,3 +135,4 @@ class RLController(SumoEnv):
                     sum_delay += self.get_veh_delay(v)
 
         return sum_delay
+    """

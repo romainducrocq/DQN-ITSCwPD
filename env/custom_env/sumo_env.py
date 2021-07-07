@@ -257,13 +257,13 @@ class SumoEnv:
         return [item for sublist in [self.get_tl_outgoing_lanes(tl_id) for tl_id in self.tl_ids] for item in sublist]
 
     def gen_tl_net(self):
-        return {tl_id: [{
+        return {tl_id: sorted([{
             "i": {"e": i, "l": [l.getID() for l in self.net.getEdge(i).getLanes()]},
             "o": {"e": o, "l": [l.getID() for l in self.net.getEdge(o).getLanes()]}
         } for (i, o) in zip(
             [i[1] for i in sorted([(i.getFromNode().getID(), i.getID()) for i in self.net.getNode(tl_id).getIncoming()])],
             [o[1] for o in sorted([(o.getToNode().getID(), o.getID()) for o in self.net.getNode(tl_id).getOutgoing()])]
-        )] for tl_id in self.tl_ids}
+        )], key=(lambda r: self.net.getEdge(r["o"]["e"]).getToNode().getCoord())) for tl_id in self.tl_ids}
 
     def get_next_yellow_phase_id(self, tl_id):
         return (self.get_phase(tl_id) + 1) % self.tl_logic[tl_id]["n"]
@@ -389,7 +389,7 @@ class SumoEnv:
         self.flow = []
 
         """"""  # TODO
-        lambdas = [3600 / 2000 for _ in range(4)]# self.insert_lambdas()
+        lambdas = [3600 / 2000 for _ in range(12)]# self.insert_lambdas()
         print([3600 / l for l in lambdas])
         """"""
 
