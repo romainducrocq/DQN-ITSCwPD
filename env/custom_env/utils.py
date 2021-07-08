@@ -19,6 +19,7 @@ SUMO_PARAMS = {
     "steps": 3600,
     "delay": 0,
     "gui": True,
+    "rnd": False,
 
     "v_type_def": "def",
     "v_type_con": "con",

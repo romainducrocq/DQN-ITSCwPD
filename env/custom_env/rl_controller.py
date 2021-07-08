@@ -30,7 +30,7 @@ class RLController(SumoEnv):
             self.simulation_step()
 
     def step(self, action):
-        action = random.randint(0, self.action_space_n-1)
+        # action = random.randint(0, self.action_space_n-1)
 
         tl_id = self.next_tl_id
 

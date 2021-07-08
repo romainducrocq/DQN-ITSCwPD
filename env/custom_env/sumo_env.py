@@ -38,7 +38,7 @@ class SumoEnv:
     def clip(min_clip, max_clip, x):
         return max(min_clip, min([max_clip, x])) if min_clip < max_clip else x
 
-    def __init__(self, gui=False):
+    def __init__(self, gui=False, rnd=False):
         self.args = SUMO_PARAMS
 
         self.gui = False
@@ -76,16 +76,24 @@ class SumoEnv:
         """
 
         self.flow_logic = self.gen_flow_logic()
+        """
+        SumoEnv.pretty_print(self.flow_logic)
+        exit()
+        """
+
+        self.gui = gui
+        self.rnd = rnd or self.args["rnd"]
+
+        self.veh_n = 0
         self.flow = []
+        self.con_p_rate = 1.
+
         """
         self.update_flow_logic()
         SumoEnv.pretty_print(self.flow_logic)
         # [print(f) for f in self.flow]
         exit()
         """
-
-        self.gui = gui
-        self.veh_n = 0
 
         self.params = self.set_params()
 
@@ -388,6 +396,12 @@ class SumoEnv:
 
         return flow
 
+    def con_penetration_rate(self):
+        if self.rnd:
+            return random.randint(1, 10) / 10
+        else:
+            return self.args["con_penetration_rate"]
+
     def lambda_veh_p_second(self, veh_p_s):
         return 1 / veh_p_s
 
@@ -395,21 +409,18 @@ class SumoEnv:
         return 3600 / veh_p_h
 
     def insert_lambdas(self):
-        return [self.lambda_veh_p_hour(random.randint(1, 10) * 100) for _ in self.flow_logic]
-        """
-        return random.choice([
-            [self.lambda_veh_p_second(random.uniform(0.1, 0.2)) for _ in self.flow_logic],
-            [self.lambda_veh_p_hour(random.randint(4, 20) * 100) for _ in self.flow_logic],
-            [self.lambda_veh_p_hour(random.choice([600, 1200])) for _ in self.flow_logic]
-        ])
-        """
+        if self.rnd:
+            return [self.lambda_veh_p_hour(random.randint(1, 10) * 100) for _ in self.flow_logic]
+        else:
+            return [self.lambda_veh_p_hour(f) for f in [200, 800, 800, 200]]
 
     def update_flow_logic(self):
         self.flow = []
+        self.con_p_rate = self.con_penetration_rate()
 
-        """"""  # TODO
-        lambdas = [3600 / 2000 for _ in range(12)]# self.insert_lambdas()
-        print([3600 / l for l in lambdas])
+        """"""
+        lambdas = self.insert_lambdas()
+        print("\n--- con:", self.con_p_rate, ", flow:", [3600 / l for l in lambdas], "---\n")
         """"""
 
         for i, e in enumerate(sorted([e for e in self.flow_logic])):
@@ -442,7 +453,7 @@ class SumoEnv:
         for e in self.flow_logic:
             self.flow_logic[e]["pro"] = self.flow_logic[e]["veh"] / v
 
-        for n in random.sample(list(range(v)), round(v * self.args["con_penetration_rate"])):
+        for n in random.sample(list(range(v)), round(v * self.con_p_rate)):
             self.flow[n] = self.flow[n][:-1] + (True,)
 
         self.flow = sorted(self.flow)
