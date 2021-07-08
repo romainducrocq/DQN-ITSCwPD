@@ -30,7 +30,7 @@ class Train:
             epsilon_min=args.eps_min,
             epsilon_decay=args.eps_dec,
             epsilon_exp_decay=args.eps_dec_exp,
-            input_dim=reduce(lambda x, y: x*y, list(self.env.observation_space.shape)),
+            input_dim=self.env.observation_space,
             output_dim=self.env.action_space.n,
             batch_size=args.bs,
             min_buffer_size=args.min_mem,
