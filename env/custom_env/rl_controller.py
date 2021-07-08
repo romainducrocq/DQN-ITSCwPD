@@ -120,16 +120,16 @@ class RLController(SumoEnv):
 
     def get_dtse_shape(self):
         return (
-            self.get_n_cells(),
+            3,
             len(self.get_tl_incoming_lanes(self.tl_ids[0])),
-            3
+            self.get_n_cells()
         )
 
     def get_dtse(self, tl_id):
         dtse = [[[
-                    0. for _ in range(self.dtse_shape[0])
+                    0. for _ in range(self.dtse_shape[2])
                 ] for _ in range(self.dtse_shape[1])
-            ] for _ in range(self.dtse_shape[2])
+            ] for _ in range(self.dtse_shape[0])
         ]
 
         for l, lane_id in enumerate(self.get_tl_incoming_lanes(tl_id)):
@@ -142,16 +142,21 @@ class RLController(SumoEnv):
                     # round(self.get_veh_speed(veh_id) / self.args["v_max_speed"], 2)
 
             if self.is_tl_lane_signal_green(tl_id, lane_id):
-                dtse[2][l] = [1. for _ in range(self.dtse_shape[0])]
+                dtse[2][l] = [1. for _ in range(self.dtse_shape[2])]
 
-        """
+        # self.print_dtse(dtse)
+
+        return dtse
+
+    def print_dtse(self, dtse):
+        """"""
         print(self.dtse_shape)
         [([print(h) for h in c], print("")) for c in dtse]
 
         # exit()
         """"""
 
-        """"""
+        """
         [print(p, v, s) for p, v, s in zip(
             [item for sublist in dtse[0] for item in sublist],
             [item for sublist in dtse[1] for item in sublist],
@@ -160,5 +165,3 @@ class RLController(SumoEnv):
 
         # exit()
         """
-
-        return dtse
