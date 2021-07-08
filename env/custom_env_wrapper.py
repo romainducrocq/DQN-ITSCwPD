@@ -43,7 +43,7 @@ class CustomEnvWrapper(gym.Env):
             self.lim_features["reward"] = (0., 1.)
 
         self.action_space = spaces.Discrete(action_space_n)
-        self.observation_space = spaces.Box(low=0., high=1., shape=(observation_space_n,), dtype=np.float32)
+        self.observation_space = spaces.Box(low=0., high=1., shape=observation_space_n, dtype=np.float32)
 
         self.log_info_buffer = []
 

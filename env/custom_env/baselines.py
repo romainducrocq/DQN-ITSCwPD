@@ -7,7 +7,7 @@ class BaselineMeta(SumoEnv):
         super(BaselineMeta, self).__init__(*args, **kwargs)
 
         self.action_space_n = 1
-        self.observation_space_n = 1
+        self.observation_space_n = (1,)
 
     def reset(self):
         raise NotImplementedError

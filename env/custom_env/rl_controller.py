@@ -2,9 +2,6 @@ from .tl_scheduler import TlScheduler
 from .sumo_env import SumoEnv
 
 import random
-from collections import deque
-
-import numpy as np
 
 
 class RLController(SumoEnv):
@@ -15,13 +12,17 @@ class RLController(SumoEnv):
         self.ty = 3
         self.tr = 2
 
-        self.dtse_shape = self.get_dtse_shape()
+        self.dtse_shape = (
+            self.get_n_cells(),
+            len(self.get_tl_incoming_lanes(self.tl_ids[0])),
+            3
+        )
         self.rew_min = 0
 
         self.scheduler, self.next_tl_id = None, None
 
         self.action_space_n = len(self.tl_logic[self.tl_ids[0]]["act"])
-        self.observation_space_n = 1
+        self.observation_space_n = self.dtse_shape
 
     def reset(self):
         self.simulation_reset()
@@ -71,8 +72,11 @@ class RLController(SumoEnv):
                     return
 
     def obs(self):
-        self.get_dtse(self.next_tl_id)
-        return []
+        tl_id = self.next_tl_id
+
+        obs = self.get_dtse(tl_id)
+
+        return obs
 
     def rew(self):
         tl_id = self.next_tl_id
@@ -138,13 +142,6 @@ class RLController(SumoEnv):
     def get_n_cells(self):
         return self.args["con_range"] // self.args["cell_length"]
 
-    def get_dtse_shape(self):
-        return (
-                self.get_n_cells() + 1,
-                len(self.get_tl_incoming_lanes(self.tl_ids[0])),
-                3
-        )
-
     def get_dtse(self, tl_id):
         dtse = [[[
                     0. for _ in range(self.dtse_shape[0])
@@ -158,23 +155,26 @@ class RLController(SumoEnv):
                 if self.is_veh_con(veh_id) and dist <= self.get_veh_con_range():
                     dtse[0][l][int(dist / self.get_cell_length())] = 1.
                     dtse[1][l][int(dist / self.get_cell_length())] = \
-                        round(self.get_veh_speed(veh_id) / self.get_veh_max_speed(), 2)
+                        self.get_veh_speed(veh_id) / self.get_veh_max_speed()
+                    # round(self.get_veh_speed(veh_id) / self.get_veh_max_speed(), 2)
 
-            print(lane_id, self.is_tl_lane_signal_green(tl_id, lane_id))
+            if self.is_tl_lane_signal_green(tl_id, lane_id):
+                dtse[2][l] = [1. for _ in range(self.dtse_shape[0])]
 
-        """"""
-        # print(np.array(dtse).shape)
-        # [([print(b) for b in a], print("")) for a in dtse]
-
-        exit()
+        return dtse
 
         """
-        [print(p, v) for p, v in zip(
+        [([print(h) for h in c], print("")) for c in dtse]
+        
+        # exit()
+        """
+
+        """
+        [print(p, v, s) for p, v, s in zip(
             [item for sublist in dtse[0] for item in sublist],
-            [item for sublist in dtse[1] for item in sublist]
+            [item for sublist in dtse[1] for item in sublist],
+            [item for sublist in dtse[2] for item in sublist]
         )]
+        
+        # exit()
         """
-
-        # if random.uniform(0, 1) > 0.98:
-        #    exit()
-        """"""
