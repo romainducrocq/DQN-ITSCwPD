@@ -12,11 +12,7 @@ class RLController(SumoEnv):
         self.ty = 3
         self.tr = 2
 
-        self.dtse_shape = (
-            self.get_n_cells(),
-            len(self.get_tl_incoming_lanes(self.tl_ids[0])),
-            3
-        )
+        self.dtse_shape = self.get_dtse_shape()
         self.rew_min = 0
 
         self.scheduler, self.next_tl_id = None, None
@@ -34,7 +30,7 @@ class RLController(SumoEnv):
             self.simulation_step()
 
     def step(self, action):
-        action = random.randint(0, 3)
+        action = random.randint(0, self.action_space_n-1)
 
         tl_id = self.next_tl_id
 
@@ -100,18 +96,6 @@ class RLController(SumoEnv):
 
     # Connected vehicles
 
-    def get_con_p(self):
-        return self.args["con_penetration_rate"]
-
-    def get_veh_box(self):
-        return self.args["v_min_gap"] + self.args["v_length"]
-
-    def get_veh_max_speed(self):
-        return self.args["v_max_speed"]
-
-    def get_veh_con_range(self):
-        return self.args["con_range"]
-
     def is_veh_con(self, veh_id):
         return self.get_veh_type(veh_id) == self.args["v_type_con"]
 
@@ -119,28 +103,27 @@ class RLController(SumoEnv):
         return [veh_id for veh_id in self.get_edge_veh_ids(edge_id) if self.is_veh_con(veh_id)]
 
     def get_veh_delay(self, veh_id):
-        return 1 - (self.get_veh_speed(veh_id) / self.get_veh_max_speed())
+        return 1 - (self.get_veh_speed(veh_id) / self.args["v_max_speed"])
 
     def get_sum_delay(self, tl_id):
         sum_delay = 0
 
         for l in self.get_tl_incoming_lanes(tl_id):
             for v in self.get_lane_veh_ids(l):
-                if self.get_veh_dist_from_junction(v) <= self.get_veh_con_range():
+                if self.get_veh_dist_from_junction(v) <= self.args["con_range"]:
                     sum_delay += self.get_veh_delay(v)
 
         return sum_delay
 
-    ####################################################################################################################
-    ####################################################################################################################
-
-    # DTSE
-
-    def get_cell_length(self):
-        return self.args["cell_length"]
-
     def get_n_cells(self):
         return self.args["con_range"] // self.args["cell_length"]
+
+    def get_dtse_shape(self):
+        return (
+            self.get_n_cells(),
+            len(self.get_tl_incoming_lanes(self.tl_ids[0])),
+            3
+        )
 
     def get_dtse(self, tl_id):
         dtse = [[[
@@ -152,29 +135,30 @@ class RLController(SumoEnv):
         for l, lane_id in enumerate(self.get_tl_incoming_lanes(tl_id)):
             for veh_id in self.get_lane_veh_ids(lane_id):
                 dist = self.get_veh_dist_from_junction(veh_id)
-                if self.is_veh_con(veh_id) and dist <= self.get_veh_con_range():
-                    dtse[0][l][int(dist / self.get_cell_length())] = 1.
-                    dtse[1][l][int(dist / self.get_cell_length())] = \
-                        self.get_veh_speed(veh_id) / self.get_veh_max_speed()
-                    # round(self.get_veh_speed(veh_id) / self.get_veh_max_speed(), 2)
+                if self.is_veh_con(veh_id) and dist <= self.args["con_range"]:
+                    dtse[0][l][int(dist / self.args["cell_length"])] = 1.
+                    dtse[1][l][int(dist / self.args["cell_length"])] = \
+                        self.get_veh_speed(veh_id) / self.args["v_max_speed"]
+                    # round(self.get_veh_speed(veh_id) / self.args["v_max_speed"], 2)
 
             if self.is_tl_lane_signal_green(tl_id, lane_id):
                 dtse[2][l] = [1. for _ in range(self.dtse_shape[0])]
 
-        return dtse
-
         """
+        print(self.dtse_shape)
         [([print(h) for h in c], print("")) for c in dtse]
-        
-        # exit()
-        """
 
-        """
+        # exit()
+        """"""
+
+        """"""
         [print(p, v, s) for p, v, s in zip(
             [item for sublist in dtse[0] for item in sublist],
             [item for sublist in dtse[1] for item in sublist],
             [item for sublist in dtse[2] for item in sublist]
         )]
-        
+
         # exit()
         """
+
+        return dtse
