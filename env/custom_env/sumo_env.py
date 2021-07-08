@@ -82,7 +82,7 @@ class SumoEnv:
         """
 
         self.gui = gui
-        self.rnd = rnd or self.args["rnd"]
+        self.rnd = rnd
 
         self.veh_n = 0
         self.flow = []

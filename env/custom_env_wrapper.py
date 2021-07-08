@@ -23,10 +23,15 @@ class CustomEnvWrapper(gym.Env):
         self.total_reward = 0.
 
         # """CHANGE ENV CONSTRUCT HERE""" ##############################################################################
-        if p == "tmp":
-            self.sumo_env = RLController(gui=SUMO_PARAMS["gui"])
-        else:
-            self.sumo_env = getattr(Baselines, p)(gui=SUMO_PARAMS["gui"])
+        if self.mode["train"]:
+            self.sumo_env = RLController(gui=False, rnd=True)
+        elif self.mode["observe"]:
+            self.sumo_env = RLController(gui=SUMO_PARAMS["gui"], rnd=SUMO_PARAMS["rnd"])
+        elif self.mode["play"]:
+            if p == "Test":
+                self.sumo_env = RLController(gui=SUMO_PARAMS["gui"], rnd=SUMO_PARAMS["rnd"])
+            else:
+                self.sumo_env = getattr(Baselines, p)(gui=SUMO_PARAMS["gui"], rnd=SUMO_PARAMS["rnd"])
         ################################################################################################################
 
         # """CHANGE FEATURE SCALING HERE""" ############################################################################
