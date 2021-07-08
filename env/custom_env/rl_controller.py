@@ -111,8 +111,6 @@ class RLController(SumoEnv):
     def is_veh_con(self, veh_id):
         return self.get_veh_type(veh_id) == self.args["v_type_con"]
 
-
-
     def get_veh_con_on_edge(self, edge_id):
         return [veh_id for veh_id in self.get_edge_veh_ids(edge_id) if self.is_veh_con(veh_id)]
 
@@ -144,32 +142,39 @@ class RLController(SumoEnv):
         return (
                 self.get_n_cells() + 1,
                 len(self.get_tl_incoming_lanes(self.tl_ids[0])),
-                2
+                3
         )
 
     def get_dtse(self, tl_id):
         dtse = [[[
-                    0 for _ in range(self.dtse_shape[0])
+                    0. for _ in range(self.dtse_shape[0])
                 ] for _ in range(self.dtse_shape[1])
             ] for _ in range(self.dtse_shape[2])
         ]
 
-        for i, l in enumerate(self.get_tl_incoming_lanes(tl_id)):
-            for v in self.get_lane_veh_ids(l):
-                d = self.get_veh_dist_from_junction(v)
-                if self.is_veh_con(v) and d <= self.get_veh_con_range():
-                    dtse[0][i][int(d / self.get_cell_length())] = 1
-                    dtse[1][i][int(d / self.get_cell_length())] = \
-                        round(self.get_veh_speed(v) / self.get_veh_max_speed(), 2)  # + 0.001
+        for l, lane_id in enumerate(self.get_tl_incoming_lanes(tl_id)):
+            for veh_id in self.get_lane_veh_ids(lane_id):
+                dist = self.get_veh_dist_from_junction(veh_id)
+                if self.is_veh_con(veh_id) and dist <= self.get_veh_con_range():
+                    dtse[0][l][int(dist / self.get_cell_length())] = 1.
+                    dtse[1][l][int(dist / self.get_cell_length())] = \
+                        round(self.get_veh_speed(veh_id) / self.get_veh_max_speed(), 2)
+
+            print(lane_id, self.is_tl_lane_signal_green(tl_id, lane_id))
 
         """"""
-        [([print(b) for b in a], print("")) for a in dtse]
+        # print(np.array(dtse).shape)
+        # [([print(b) for b in a], print("")) for a in dtse]
 
+        exit()
+
+        """
         [print(p, v) for p, v in zip(
             [item for sublist in dtse[0] for item in sublist],
             [item for sublist in dtse[1] for item in sublist]
         )]
+        """
 
-        if random.uniform(0, 1) > 0.95:
-            exit()
+        # if random.uniform(0, 1) > 0.98:
+        #    exit()
         """"""

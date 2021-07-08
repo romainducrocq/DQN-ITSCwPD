@@ -69,6 +69,12 @@ class SumoEnv:
         exit()
         """
 
+        self.tl_signals = self.gen_tl_signals()
+        """
+        SumoEnv.pretty_print(self.tl_signals)
+        exit()
+        """
+
         self.flow_logic = self.gen_flow_logic()
         self.flow = []
         """
@@ -223,7 +229,7 @@ class SumoEnv:
     ####################################################################################################################
     ####################################################################################################################
 
-    # tl logic
+    # tl logic & signals
 
     def get_tl_edge_lanes(self, tl_id, edge_id):
         for edge in self.tl_net[tl_id]:
@@ -329,6 +335,19 @@ class SumoEnv:
                         tl_logic[tl_id]["n"] += 1
 
         return tl_logic
+
+    def is_tl_lane_signal_green(self, tl_id, lane_id):
+        return "g" in [list(self.get_ryg_state(tl_id))[i].lower() for i in self.tl_signals[tl_id][lane_id]]
+
+    def gen_tl_signals(self):
+        tl_signals = {tl_id: {} for tl_id in self.tl_ids}
+        for tl_id in tl_signals:
+            for (e, c) in enumerate(self.get_tl_lane_signals(tl_id)):
+                if c[0][0] not in tl_signals[tl_id]:
+                    tl_signals[tl_id][c[0][0]] = []
+                tl_signals[tl_id][c[0][0]].append(e)
+
+        return tl_signals
 
     ####################################################################################################################
     ####################################################################################################################
