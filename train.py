@@ -6,7 +6,6 @@ import os
 import time
 import argparse
 import itertools
-from functools import reduce
 from datetime import timedelta
 
 
