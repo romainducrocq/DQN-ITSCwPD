@@ -5,7 +5,6 @@ from dqn import make_env, Networks
 import os
 import argparse
 import numpy as np
-from functools import reduce
 
 from torch import device, cuda
 
@@ -31,13 +30,13 @@ class Observe(View):
         }[model_pack.split('_lr')[0]])(
             device(("cuda:" + args.gpu) if cuda.is_available() else "cpu"),
             float(model_pack.split('_lr')[1].split('_')[0]),
-            reduce(lambda x, y: x * y, list(self.env.observation_space.shape)),
+            self.env.observation_space,
             self.env.action_space.n
         )
 
         self.network.load(args.d)
 
-        self.obs = np.zeros(reduce(lambda x, y: x * y, list(self.env.observation_space.shape)), dtype=np.float32)
+        self.obs = np.zeros(self.env.observation_space.shape, dtype=np.float32)
 
         self.repeat = 0
         self.action = 0
