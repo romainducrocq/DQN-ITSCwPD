@@ -7,7 +7,7 @@ CONFIG = "1tls_3x3"
 # """CHANGE HYPER PARAMETERS HERE""" ###################################################################################
 HYPER_PARAMS = {
     'gpu': '0',                                 # GPU #
-    'n_env': 0,                                 # Multi-processing environments
+    'n_env': 1,                                 # Multi-processing environments
     'lr': 1e-04,                                # Learning rate
     'gamma': 0.99,                              # Discount factor
     'eps_start': 1.,                            # Epsilon start
@@ -26,7 +26,7 @@ HYPER_PARAMS = {
     'log_dir': './logs/train/' + CONFIG + "/",  # Log directory
     'load': True,                               # Load model
     'repeat': 0,                                # Repeat action
-    'max_episode_steps': 0,                     # Time limit episode steps
+    'max_episode_steps': 1000,                  # Time limit episode steps
     'max_total_steps': 0,                       # Max total training steps if > 0, else inf training
     'algo': 'DuelingDoubleDQNAgent'             # DQNAgent
                                                 # DoubleDQNAgent
