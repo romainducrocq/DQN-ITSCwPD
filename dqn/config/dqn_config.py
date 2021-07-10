@@ -11,7 +11,7 @@ HYPER_PARAMS = {
     'lr': 1e-04,                                # Learning rate
     'gamma': 0.99,                              # Discount factor
     'eps_start': 1.,                            # Epsilon start
-    'eps_min': 0.01,                            # Epsilon min
+    'eps_min': 0.1,                             # Epsilon min
     'eps_dec': 1e6,                             # Epsilon decay
     'eps_dec_exp': True,                        # Epsilon exponential decay
     'bs': 32,                                   # Batch size
