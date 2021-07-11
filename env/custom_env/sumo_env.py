@@ -102,8 +102,7 @@ class SumoEnv:
             SUMO_HOME + "bin/sumo" + ("-gui" if self.gui else ""), "-c",
             self.data_dir + self.config + ".sumocfg",
             "--tripinfo-output", self.data_dir + "tripinfo.xml",
-            "--time-to-teleport", str(self.args["steps"]),
-            "--waiting-time-memory", str(self.args["steps"])
+            "--time-to-teleport", str(self.args["steps"])
         ]
 
         if self.gui:

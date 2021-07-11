@@ -2,7 +2,7 @@
 
 function run () {
 
-python3 play.py -player MaxPressureBaseline
+python3 play.py -player Test
 
 }
 

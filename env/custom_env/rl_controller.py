@@ -13,7 +13,7 @@ class RLController(SumoEnv):
         self.tr = 2
 
         self.dtse_shape = self.get_dtse_shape()
-        self.rew_min = 0
+        self.sum_delay_min, self.sum_waiting_time_min = 0, 0
 
         self.scheduler, self.next_tl_id = None, None
 
@@ -30,7 +30,7 @@ class RLController(SumoEnv):
             self.simulation_step()
 
     def step(self, action):
-        # action = random.randint(0, self.action_space_n-1)
+        action = random.randint(0, self.action_space_n-1)
 
         tl_id = self.next_tl_id
 
@@ -77,11 +77,29 @@ class RLController(SumoEnv):
     def rew(self):
         tl_id = self.next_tl_id
 
+        """
         sum_delay = self.get_sum_delay(tl_id)
 
-        self.rew_min = min([self.rew_min, -sum_delay])
+        self.sum_delay_min = min([self.sum_delay_min, -sum_delay])
 
-        rew = 0 if self.rew_min == 0 else 1 + sum_delay / self.rew_min
+        rew = 0 if self.sum_delay_min == 0 else 1 + sum_delay / self.sum_delay_min
+        """
+
+        sum_delay, sum_waiting_time = self.get_sum_delay_a_sum_waiting_time(tl_id)
+
+        self.sum_delay_min, self.sum_waiting_time_min = \
+            min([self.sum_delay_min, -sum_delay]), \
+            min([self.sum_waiting_time_min, -sum_waiting_time])
+
+        rew_delay, rew_waiting_time = \
+            0 if self.sum_delay_min == 0 else 1 + sum_delay / self.sum_delay_min, \
+            0 if self.sum_waiting_time_min == 0 else 1 + sum_waiting_time / self.sum_waiting_time_min
+
+        w1, w2 = 0.5, 0.5
+
+        rew = SumoEnv.clip(0, 1,
+                           w1 * rew_delay + w2 * rew_waiting_time
+                           )
 
         return rew
 
@@ -105,15 +123,36 @@ class RLController(SumoEnv):
     def get_veh_delay(self, veh_id):
         return 1 - (self.get_veh_speed(veh_id) / self.args["v_max_speed"])
 
+    def yield_veh_cons(self, tl_id):
+        for lane_id in self.get_tl_incoming_lanes(tl_id):
+            for veh_id in self.get_lane_veh_ids(lane_id):
+                if self.get_veh_dist_from_junction(veh_id) <= self.args["con_range"]:
+                    yield veh_id
+
     def get_sum_delay(self, tl_id):
         sum_delay = 0
 
-        for l in self.get_tl_incoming_lanes(tl_id):
-            for v in self.get_lane_veh_ids(l):
-                if self.get_veh_dist_from_junction(v) <= self.args["con_range"]:
-                    sum_delay += self.get_veh_delay(v)
+        for veh_id in self.yield_veh_cons(tl_id):
+            sum_delay += self.get_veh_delay(veh_id)
 
         return sum_delay
+
+    def get_sum_waiting_time(self, tl_id):
+        sum_waiting_time = 0
+
+        for veh_id in self.yield_veh_cons(tl_id):
+            sum_waiting_time += self.get_veh_waiting_time(veh_id)
+
+        return sum_waiting_time
+
+    def get_sum_delay_a_sum_waiting_time(self, tl_id):
+        sum_delay, sum_waiting_time = 0, 0
+
+        for veh_id in self.yield_veh_cons(tl_id):
+            sum_delay += self.get_veh_delay(veh_id)
+            sum_waiting_time += self.get_veh_waiting_time(veh_id)
+
+        return sum_delay, sum_waiting_time
 
     def get_n_cells(self):
         return self.args["con_range"] // self.args["cell_length"]
