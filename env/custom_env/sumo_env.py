@@ -101,7 +101,9 @@ class SumoEnv:
         params = [
             SUMO_HOME + "bin/sumo" + ("-gui" if self.gui else ""), "-c",
             self.data_dir + self.config + ".sumocfg",
-            "--tripinfo-output", self.data_dir + "tripinfo.xml"
+            "--tripinfo-output", self.data_dir + "tripinfo.xml",
+            "--time-to-teleport", str(self.args["steps"]),
+            "--waiting-time-memory", str(self.args["steps"])
         ]
 
         if self.gui:
@@ -224,6 +226,9 @@ class SumoEnv:
 
     def get_veh_waiting_time(self, veh_id):
         return traci.vehicle.getWaitingTime(veh_id)
+
+    def get_veh_accumulated_waiting_time(self, veh_id):
+        return traci.vehicle.getAccumulatedWaitingTime(veh_id)
 
     def get_veh_lane(self, veh_id):
         return traci.vehicle.getLaneID(veh_id)
