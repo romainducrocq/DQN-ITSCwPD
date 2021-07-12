@@ -103,11 +103,13 @@ class RLController(SumoEnv):
         rew = w1 * rew_delay + w2 * rew_waiting_time
         """
 
+        """"""
         sum_delay_sq = self.get_sum_delay_sq(tl_id)
 
         self.sum_delay_sq_min = min([self.sum_delay_sq_min, -sum_delay_sq])
 
         rew = 0 if self.sum_delay_sq_min == 0 else 1 + sum_delay_sq / self.sum_delay_sq_min
+        """"""
 
         rew = SumoEnv.clip(0, 1, rew)
 
