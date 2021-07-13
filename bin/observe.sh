@@ -2,7 +2,7 @@
 
 function run () {
 
-python3 observe.py -d save/1tls_3x3/DuelingDoubleDQNAgent_lr0.0001_model.pack
+python3 observe.py -d save/1tls_3x3/DuelingDoubleDQNAgent_lr0.001_model.pack
 
 }
 

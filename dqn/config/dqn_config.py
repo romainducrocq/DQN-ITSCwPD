@@ -8,7 +8,7 @@ CONFIG = "1tls_3x3"
 HYPER_PARAMS = {
     'gpu': '0',                                 # GPU #
     'n_env': 1,                                 # Multi-processing environments
-    'lr': 1e-04,                                # Learning rate
+    'lr': 1e-03,                                # Learning rate
     'gamma': 0.99,                              # Discount factor
     'eps_start': 1.,                            # Epsilon start
     'eps_min': 0.01,                            # Epsilon min
