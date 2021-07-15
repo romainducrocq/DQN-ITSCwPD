@@ -9,7 +9,7 @@ HYPER_PARAMS = {
     'gpu': '0',                                 # GPU #
     'n_env': 1,                                 # Multi-processing environments
     'lr': 1e-05,                                # Learning rate
-    'gamma': 0.99,                              # Discount factor
+    'gamma': 0.9,                               # Discount factor
     'eps_start': 1.,                            # Epsilon start
     'eps_min': 0.01,                            # Epsilon min
     'eps_dec': 1e6,                             # Epsilon decay
