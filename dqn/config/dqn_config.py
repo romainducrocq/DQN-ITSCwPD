@@ -85,7 +85,7 @@ def network_config(input_dim):
         activation,
         nn.Conv2d(cnn_dims[0][0], cnn_dims[1][0], kernel_size=cnn_dims[1][1], stride=cnn_dims[1][2]),
         activation,
-        nn.Conv2d(cnn_dims[0][0], cnn_dims[1][0], kernel_size=cnn_dims[2][1], stride=cnn_dims[2][2]),
+        nn.Conv2d(cnn_dims[1][0], cnn_dims[2][0], kernel_size=cnn_dims[2][1], stride=cnn_dims[2][2]),
         activation,
         nn.Flatten()
     )
