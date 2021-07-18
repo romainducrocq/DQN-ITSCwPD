@@ -12,7 +12,7 @@ HYPER_PARAMS = {
     'gamma': 0.99,                              # Discount factor
     'eps_start': 1.,                            # Epsilon start
     'eps_min': 0.01,                            # Epsilon min
-    'eps_dec': 1e6,                             # Epsilon decay
+    'eps_dec': 2e6,                             # Epsilon decay
     'eps_dec_exp': True,                        # Epsilon exponential decay
     'bs': 32,                                   # Batch size
     'min_mem': 100000,                          # Replay memory buffer min size
@@ -40,7 +40,7 @@ HYPER_PARAMS = {
 # """CHANGE NETWORK CONFIG HERE""" #####################################################################################
 def network_config(input_dim):
     # """CHANGE NETWORK HERE""" ########################################################################################
-    """
+    """"""
     cnn_dims = (
         (16, 4, 2),
         (32, 2, 1)
@@ -68,8 +68,8 @@ def network_config(input_dim):
         nn.Linear(fc_dims[0], fc_dims[1]),
         activation
     )
-    """
     """"""
+    """
     cnn_dims = (
         (32, 4, 2),
         (64, 2, 2),
@@ -100,7 +100,7 @@ def network_config(input_dim):
         nn.Linear(fc_dims[0], fc_dims[1]),
         activation
     )
-    """"""
+    """
     ####################################################################################################################
 
     # """CHANGE OPTIMIZER HERE""" ######################################################################################
