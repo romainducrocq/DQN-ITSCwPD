@@ -1,10 +1,11 @@
 CONFIGS_SIMPLE = [
     "1tls_2x2",
     "1tls_3x3",
-    "1tls_4x4",
-    "1tls_5x5"
+    "1tls_4x4"
+    # "1tls_5x5"
 ]
 
+"""
 CONFIGS_MULTI = [
     "2tls_3x3x2",
     "3tls_2x2x3",
@@ -12,6 +13,7 @@ CONFIGS_MULTI = [
     "4tls_3x3x2x2",
     "9tls_3x3x3x3"
 ]
+"""
 
 SUMO_PARAMS = {
     "config": CONFIGS_SIMPLE[1],

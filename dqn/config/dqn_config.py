@@ -2,7 +2,11 @@ import torch as T
 import torch.nn as nn
 import torch.optim as optim
 
-CONFIG = "1tls_3x3"
+CONFIG = [
+    "1tls_2x2",
+    "1tls_3x3",
+    "1tls_4x4"
+][1]
 
 # """CHANGE HYPER PARAMETERS HERE""" ###################################################################################
 HYPER_PARAMS = {
