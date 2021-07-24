@@ -15,7 +15,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 
 class Agent(metaclass=ABCMeta):
-    def __init__(self, n_env, lr, gamma, epsilon_start, epsilon_min, epsilon_decay, epsilon_exp_decay, input_dim, output_dim,
+    def __init__(self, n_env, lr, gamma, epsilon_start, epsilon_min, epsilon_decay, epsilon_exp_decay, nn_conf_func, input_dim, output_dim,
                  batch_size, min_buffer_size, buffer_size, update_target_frequency, target_soft_update, target_soft_update_tau,
                  save_frequency, log_frequency, save_dir, log_dir, load, algo, gpu):
         self.n_env = n_env
@@ -25,6 +25,7 @@ class Agent(metaclass=ABCMeta):
         self.epsilon_min = epsilon_min
         self.epsilon_decay = epsilon_decay
         self.epsilon_exp_decay = epsilon_exp_decay
+        self.nn_conf_func = nn_conf_func
         self.input_dim = input_dim
         self.output_dim = output_dim
         self.batch_size = batch_size
@@ -275,8 +276,8 @@ class DQNAgent(SimpleAgent):
 
         self.replay_memory_buffer = ReplayMemoryNaive(self.buffer_size, self.batch_size)
 
-        self.online_network = DeepQNetwork(self.device, self.lr, self.input_dim, self.output_dim)
-        self.target_network = DeepQNetwork(self.device, self.lr, self.input_dim, self.output_dim)
+        self.online_network = DeepQNetwork(self.device, self.lr, self.nn_conf_func, self.input_dim, self.output_dim)
+        self.target_network = DeepQNetwork(self.device, self.lr, self.nn_conf_func, self.input_dim, self.output_dim)
 
         self.update_target_network(force=True)
 
@@ -287,8 +288,8 @@ class DoubleDQNAgent(DoubleAgent):
 
         self.replay_memory_buffer = ReplayMemoryNaive(self.buffer_size, self.batch_size)
 
-        self.online_network = DeepQNetwork(self.device, self.lr, self.input_dim, self.output_dim)
-        self.target_network = DeepQNetwork(self.device, self.lr, self.input_dim, self.output_dim)
+        self.online_network = DeepQNetwork(self.device, self.lr, self.nn_conf_func, self.input_dim, self.output_dim)
+        self.target_network = DeepQNetwork(self.device, self.lr, self.nn_conf_func, self.input_dim, self.output_dim)
 
         self.update_target_network(force=True)
 
@@ -299,8 +300,8 @@ class DuelingDoubleDQNAgent(DoubleAgent):
 
         self.replay_memory_buffer = ReplayMemoryNaive(self.buffer_size, self.batch_size)
 
-        self.online_network = DuelingDeepQNetwork(self.device, self.lr, self.input_dim, self.output_dim)
-        self.target_network = DuelingDeepQNetwork(self.device, self.lr, self.input_dim, self.output_dim)
+        self.online_network = DuelingDeepQNetwork(self.device, self.lr, self.nn_conf_func, self.input_dim, self.output_dim)
+        self.target_network = DuelingDeepQNetwork(self.device, self.lr, self.nn_conf_func, self.input_dim, self.output_dim)
 
         self.update_target_network(force=True)
 
@@ -311,7 +312,7 @@ class PerDuelingDoubleDQNAgent(PerDoubleAgent):
 
         self.replay_memory_buffer = ReplayMemoryPrioritized(self.buffer_size, self.batch_size, self.epsilon_decay)
 
-        self.online_network = DuelingDeepQNetwork(self.device, self.lr, self.input_dim, self.output_dim, reduction='none')
-        self.target_network = DuelingDeepQNetwork(self.device, self.lr, self.input_dim, self.output_dim, reduction='none')
+        self.online_network = DuelingDeepQNetwork(self.device, self.lr, self.nn_conf_func, self.input_dim, self.output_dim, reduction='none')
+        self.target_network = DuelingDeepQNetwork(self.device, self.lr, self.nn_conf_func, self.input_dim, self.output_dim, reduction='none')
 
         self.update_target_network(force=True)

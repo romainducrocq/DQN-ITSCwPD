@@ -1,12 +1,10 @@
-import torch as T
+from .custom_env import SUMO_PARAMS
+
 import torch.nn as nn
 import torch.optim as optim
+from torch import no_grad, as_tensor
 
-CONFIG = [
-    "1tls_2x2",
-    "1tls_3x3",
-    "1tls_4x4"
-][2]
+CONFIG = SUMO_PARAMS["config"]
 
 # """CHANGE HYPER PARAMETERS HERE""" ###################################################################################
 HYPER_PARAMS = {
@@ -62,8 +60,8 @@ def network_config(input_dim):
         nn.Flatten()
     )
 
-    with T.no_grad():
-        n_flatten = cnn(T.as_tensor(input_dim.sample()[None]).float()).shape[1]
+    with no_grad():
+        n_flatten = cnn(as_tensor(input_dim.sample()[None]).float()).shape[1]
 
     net = nn.Sequential(
         cnn,
@@ -94,8 +92,8 @@ def network_config(input_dim):
         nn.Flatten()
     )
 
-    with T.no_grad():
-        n_flatten = cnn(T.as_tensor(input_dim.sample()[None]).float()).shape[1]
+    with no_grad():
+        n_flatten = cnn(as_tensor(input_dim.sample()[None]).float()).shape[1]
 
     net = nn.Sequential(
         cnn,
@@ -107,18 +105,18 @@ def network_config(input_dim):
     """
     ####################################################################################################################
 
-    # """CHANGE OPTIMIZER HERE""" ######################################################################################
-    optim_func = (lambda params, lr: optim.Adam(params, lr=lr))
-    ####################################################################################################################
-
-    # """CHANGE LOSS HERE""" ###########################################################################################
-    loss_func = (lambda reduction: nn.SmoothL1Loss(reduction=reduction))
-    ####################################################################################################################
-
     # """CHANGE FC DUELING LAYER OUTPUT DIM HERE""" ####################################################################
     fc_out_dim = fc_dims[-1]
     ####################################################################################################################
 
-    return net, optim_func, loss_func, fc_out_dim
+    # """CHANGE OPTIMIZER HERE""" ######################################################################################
+    optim_func = optim.Adam
+    ####################################################################################################################
+
+    # """CHANGE LOSS HERE""" ###########################################################################################
+    loss_func = nn.SmoothL1Loss
+    ####################################################################################################################
+
+    return net, fc_out_dim, optim_func, loss_func
 
 ########################################################################################################################

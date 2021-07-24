@@ -1,5 +1,5 @@
-from env import Env, View
-from dqn import make_env
+from env import CustomEnv, View
+from dqn import CustomEnvWrapper, make_env
 
 import argparse
 
@@ -8,7 +8,7 @@ class Play(View):
     def __init__(self, args):
         super(Play, self).__init__(type(self).__name__.upper(),
                                    make_env(
-                                       env=Env(type(self).__name__.lower(), p=args.player),
+                                       env=CustomEnvWrapper(CustomEnv(type(self).__name__.lower(), p=args.player)),
                                        max_episode_steps=args.max_s)
                                    )
 
@@ -20,7 +20,7 @@ class Play(View):
         [print(arg, "=", getattr(args, arg)) for arg in vars(args)]
 
         self.max_episodes = args.max_e
-        self.log = (args.log, args.log_s, "./logs/test/" + args.player)
+        self.log = (args.log, args.log_s, args.log_dir + args.player)
 
     def setup(self):
         _ = self.env.reset()
@@ -51,6 +51,7 @@ if __name__ == "__main__":
     parser.add_argument('-max_e', type=int, default=0, help='Max episodes if > 0, else inf')
     parser.add_argument('-log', type=str2bool, default=False, help='Log csv to ./logs/test/')
     parser.add_argument('-log_s', type=int, default=0, help='Log step if > 0, else episode')
+    parser.add_argument('-log_dir', type=str, default="./logs/test/", help='Log directory')
     parser.add_argument('-player', type=str, default='player', help='Player')
 
     Play(parser.parse_args()).run()

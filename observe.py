@@ -1,6 +1,5 @@
-from env import Env, View
-from dqn.config import HYPER_PARAMS
-from dqn import make_env, Networks
+from env import HYPER_PARAMS, network_config, CustomEnv, View
+from dqn import CustomEnvWrapper, make_env, Networks
 
 import os
 import argparse
@@ -16,7 +15,7 @@ class Observe(View):
 
         super(Observe, self).__init__(type(self).__name__.upper(),
                                       make_env(
-                                          env=Env(type(self).__name__.lower()),
+                                          env=CustomEnvWrapper(CustomEnv(type(self).__name__.lower())),
                                           max_episode_steps=args.max_s)
                                       )
 
@@ -30,6 +29,7 @@ class Observe(View):
         }[model_pack.split('_lr')[0]])(
             device(("cuda:" + args.gpu) if cuda.is_available() else "cpu"),
             float(model_pack.split('_lr')[1].split('_')[0]),
+            network_config,
             self.env.observation_space,
             self.env.action_space.n
         )
@@ -48,7 +48,7 @@ class Observe(View):
         [print(arg, "=", getattr(args, arg)) for arg in vars(args)]
 
         self.max_episodes = args.max_e
-        self.log = (args.log, args.log_s, "./logs/test/" + model_pack)
+        self.log = (args.log, args.log_s, args.log_dir + model_pack)
 
     def setup(self):
         self.obs = self.env.reset()
@@ -85,5 +85,6 @@ if __name__ == "__main__":
     parser.add_argument('-max_e', type=int, default=0, help='Max episodes if > 0, else inf')
     parser.add_argument('-log', type=str2bool, default=False, help='Log csv to ./logs/test/')
     parser.add_argument('-log_s', type=int, default=0, help='Log step if > 0, else episode')
+    parser.add_argument('-log_dir', type=str, default="./logs/test/", help='Log directory')
 
     Observe(parser.parse_args()).run()

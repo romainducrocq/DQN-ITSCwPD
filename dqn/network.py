@@ -1,5 +1,3 @@
-from .config import network_config
-
 import os
 
 import torch as T
@@ -11,10 +9,12 @@ msgpack_numpy_patch()
 
 
 class Network(nn.Module):
-    def __init__(self, device, input_dim):
+    def __init__(self, device, nn_conf_func, input_dim):
         super(Network, self).__init__()
 
-        self.net, self.optim_func, self.loss_func, self.fc_out_dim = network_config(input_dim)
+        self.net, self.fc_out_dim, optim_func, loss_func = nn_conf_func(input_dim)
+        self.optim_func = (lambda params, lr: optim_func(params, lr=lr))
+        self.loss_func = (lambda reduction: loss_func(reduction=reduction))
 
         self.device = device
 
@@ -48,8 +48,8 @@ class Network(nn.Module):
 
 
 class DeepQNetwork(Network):
-    def __init__(self, device, lr, input_dim, output_dim, reduction='mean'):
-        super(DeepQNetwork, self).__init__(device, input_dim)
+    def __init__(self, device, lr, nn_conf_func, input_dim, output_dim, reduction='mean'):
+        super(DeepQNetwork, self).__init__(device, nn_conf_func, input_dim)
 
         self.fc_out = nn.Linear(self.fc_out_dim, output_dim)
 
@@ -75,8 +75,8 @@ class DeepQNetwork(Network):
 
 
 class DuelingDeepQNetwork(Network):
-    def __init__(self, device, lr, input_dim, output_dim, reduction='mean'):
-        super(DuelingDeepQNetwork, self).__init__(device, input_dim)
+    def __init__(self, device, lr, nn_conf_func, input_dim, output_dim, reduction='mean'):
+        super(DuelingDeepQNetwork, self).__init__(device, nn_conf_func, input_dim)
 
         self.fc_val = nn.Linear(self.fc_out_dim, 1)
         self.fc_adv = nn.Linear(self.fc_out_dim, output_dim)
