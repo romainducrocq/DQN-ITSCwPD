@@ -41,9 +41,6 @@ class SumoEnv:
     def __init__(self, gui=False, rnd=False):
         self.args = SUMO_PARAMS
 
-        if self.args["seed"]:
-            random.seed(42)
-
         self.gui = False
         self.config = self.args["config"]
         self.data_dir = self.SUMO_ENV + "data/" + self.config + "/"
@@ -100,6 +97,8 @@ class SumoEnv:
 
         self.params = self.set_params()
 
+        self.seed_count = 0
+
     def set_params(self):
         params = [
             SUMO_HOME + "bin/sumo" + ("-gui" if self.gui else ""), "-c",
@@ -151,7 +150,7 @@ class SumoEnv:
         raise NotImplementedError
 
     def info(self):
-        raise NotImplementedError
+        return {}
 
     def is_simulation_end(self):
         return traci.simulation.getMinExpectedNumber() == 0
@@ -403,6 +402,12 @@ class SumoEnv:
 
         return flow
 
+    def set_seed(self):
+        if self.args["seed"]:
+            self.seed_count += 1
+            random.seed(self.seed_count)
+            np.random.seed(self.seed_count)
+
     def con_penetration_rate(self):
         if self.rnd:
             return random.randint(1, 10) / 10
@@ -422,6 +427,8 @@ class SumoEnv:
             return [self.lambda_veh_p_hour(f) for f in [200, 800, 800, 200]]
 
     def update_flow_logic(self):
+        self.set_seed()
+
         self.flow = []
         self.con_p_rate = self.con_penetration_rate()
 

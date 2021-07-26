@@ -7,7 +7,7 @@ class BaselineMeta(SumoEnv):
         super(BaselineMeta, self).__init__(*args, **kwargs)
 
         self.action_space_n = 1
-        self.observation_space_n = (1,)
+        self.observation_space_n = 1
 
     def reset(self):
         raise NotImplementedError
@@ -23,9 +23,6 @@ class BaselineMeta(SumoEnv):
 
     def done(self):
         return self.is_simulation_end() or self.get_current_time() >= self.args["steps"]
-
-    def info(self):
-        raise NotImplementedError
 
 
 class UniformBaseline(BaselineMeta):
@@ -78,9 +75,6 @@ class UniformBaseline(BaselineMeta):
                 else:
                     self.next_tl_id = tl_id
                     return
-
-    def info(self):
-        return {}
 
 
 class MaxPressureBaseline(BaselineMeta):
@@ -150,9 +144,6 @@ class MaxPressureBaseline(BaselineMeta):
                 else:
                     self.next_tl_id = tl_id
                     return
-
-    def info(self):
-        return {}
 
 
 class SotlBaseline(BaselineMeta):
@@ -229,6 +220,3 @@ class SotlBaseline(BaselineMeta):
                 else:
                     self.next_tl_id = tl_id
                     return
-
-    def info(self):
-        return {}
