@@ -5,7 +5,6 @@ CONFIGS_SIMPLE = [
     # "1tls_5x5"
 ]
 
-"""
 CONFIGS_MULTI = [
     "2tls_3x3x2",
     "3tls_2x2x3",
@@ -13,10 +12,9 @@ CONFIGS_MULTI = [
     "4tls_3x3x2x2",
     "9tls_3x3x3x3"
 ]
-"""
 
 SUMO_PARAMS = {
-    "config": CONFIGS_SIMPLE[2],
+    "config": CONFIGS_SIMPLE[1],
 
     "steps": 3600,
     "delay": 0,
