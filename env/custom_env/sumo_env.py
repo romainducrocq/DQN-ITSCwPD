@@ -41,6 +41,9 @@ class SumoEnv:
     def __init__(self, gui=False, rnd=False):
         self.args = SUMO_PARAMS
 
+        if self.args["seed"]:
+            random.seed(42)
+
         self.gui = False
         self.config = self.args["config"]
         self.data_dir = self.SUMO_ENV + "data/" + self.config + "/"
@@ -489,3 +492,20 @@ class SumoEnv:
                 print('', file=f)
 
             print('</routes>', file=f)
+
+    ####################################################################################################################
+    ####################################################################################################################
+
+    # Connected vehicles
+
+    def is_veh_con(self, veh_id):
+        return self.get_veh_type(veh_id) == self.args["v_type_con"]
+
+    def get_veh_con_on_edge(self, edge_id):
+        return [veh_id for veh_id in self.get_edge_veh_ids(edge_id) if self.is_veh_con(veh_id)]
+
+    def yield_tl_vehs(self, tl_id):
+        for lane_id in self.get_tl_incoming_lanes(tl_id):
+            for veh_id in self.get_lane_veh_ids(lane_id):
+                # if self.get_veh_dist_from_junction(veh_id) <= self.args["con_range"]:
+                yield veh_id

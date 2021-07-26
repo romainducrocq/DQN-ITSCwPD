@@ -126,31 +126,8 @@ class RLController(SumoEnv):
 
     # Connected vehicles
 
-    def is_veh_con(self, veh_id):
-        return self.get_veh_type(veh_id) == self.args["v_type_con"]
-
-    def get_veh_con_on_edge(self, edge_id):
-        return [veh_id for veh_id in self.get_edge_veh_ids(edge_id) if self.is_veh_con(veh_id)]
-
-    def get_veh_delay(self, veh_id):
-        return 1 - (self.get_veh_speed(veh_id) / self.args["v_max_speed"])
-
     def get_veh_delay_sq(self, veh_id):
         return 1 - pow((self.get_veh_speed(veh_id) / self.args["v_max_speed"]), 2)
-
-    def yield_tl_vehs(self, tl_id):
-        for lane_id in self.get_tl_incoming_lanes(tl_id):
-            for veh_id in self.get_lane_veh_ids(lane_id):
-                # if self.get_veh_dist_from_junction(veh_id) <= self.args["con_range"]:
-                yield veh_id
-
-    def get_sum_delay(self, tl_id):
-        sum_delay = 0
-
-        for veh_id in self.yield_tl_vehs(tl_id):
-            sum_delay += self.get_veh_delay(veh_id)
-
-        return sum_delay
 
     def get_sum_delay_sq(self, tl_id):
         sum_delay = 0
@@ -160,6 +137,22 @@ class RLController(SumoEnv):
 
         return sum_delay
 
+    """
+    def get_veh_delay(self, veh_id):
+        return 1 - (self.get_veh_speed(veh_id) / self.args["v_max_speed"])
+    """
+
+    """
+    def get_sum_delay(self, tl_id):
+        sum_delay = 0
+
+        for veh_id in self.yield_tl_vehs(tl_id):
+            sum_delay += self.get_veh_delay(veh_id)
+
+        return sum_delay
+    """
+
+    """
     def get_sum_waiting_time(self, tl_id):
         sum_waiting_time = 0
 
@@ -167,7 +160,9 @@ class RLController(SumoEnv):
             sum_waiting_time += self.get_veh_waiting_time(veh_id)
 
         return sum_waiting_time
+    """
 
+    """
     def get_sum_delay_a_sum_waiting_time(self, tl_id):
         sum_delay, sum_waiting_time = 0, 0
 
@@ -176,6 +171,7 @@ class RLController(SumoEnv):
             sum_waiting_time += self.get_veh_waiting_time(veh_id)
 
         return sum_delay, sum_waiting_time
+    """
 
     def get_n_cells(self):
         return self.args["con_range"] // self.args["cell_length"]
