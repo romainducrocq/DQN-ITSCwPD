@@ -14,14 +14,14 @@ class DqnEnv:
 
         # """CHANGE ENV CONSTRUCT HERE""" ##############################################################################
         if self.mode["train"]:
-            self.sumo_env = RLController(gui=False, rnd=(True, True))
+            self.sumo_env = RLController(gui=False, log=False, rnd=(True, True))
         elif self.mode["observe"]:
-            self.sumo_env = RLController(gui=SUMO_PARAMS["gui"], rnd=SUMO_PARAMS["rnd"])
+            self.sumo_env = RLController(gui=SUMO_PARAMS["gui"], log=SUMO_PARAMS["log"], rnd=SUMO_PARAMS["rnd"])
         elif self.mode["play"]:
             if p == "Test":
-                self.sumo_env = RLController(gui=SUMO_PARAMS["gui"], rnd=SUMO_PARAMS["rnd"])
+                self.sumo_env = RLController(gui=SUMO_PARAMS["gui"], log=SUMO_PARAMS["log"], rnd=SUMO_PARAMS["rnd"])
             else:
-                self.sumo_env = getattr(Baselines, p)(gui=SUMO_PARAMS["gui"], rnd=SUMO_PARAMS["rnd"])
+                self.sumo_env = getattr(Baselines, p)(gui=SUMO_PARAMS["gui"], log=SUMO_PARAMS["log"], rnd=SUMO_PARAMS["rnd"])
         ################################################################################################################
 
         # """CHANGE FEATURE SCALING HERE""" ############################################################################

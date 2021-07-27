@@ -38,7 +38,7 @@ class SumoEnv:
     def clip(min_clip, max_clip, x):
         return max(min_clip, min([max_clip, x])) if min_clip < max_clip else x
 
-    def __init__(self, gui=False, rnd=(False, False)):
+    def __init__(self, gui=False, log=False, rnd=(False, False)):
         self.args = SUMO_PARAMS
 
         self.gui = False
@@ -82,6 +82,7 @@ class SumoEnv:
         """
 
         self.gui = gui
+        self.log = log
         self.rnd = rnd
 
         self.veh_n = 0
@@ -150,7 +151,7 @@ class SumoEnv:
         raise NotImplementedError
 
     def info(self):
-        return {}
+        return {} if not self.log else self.log_info()
 
     def is_simulation_end(self):
         return traci.simulation.getMinExpectedNumber() == 0
@@ -508,13 +509,17 @@ class SumoEnv:
     def is_veh_con(self, veh_id):
         return self.get_veh_type(veh_id) == self.args["v_type_con"]
 
-    """
-    def get_veh_con_on_edge(self, edge_id):
-        return [veh_id for veh_id in self.get_edge_veh_ids(edge_id) if self.is_veh_con(veh_id)]
-    """
-
     def yield_tl_vehs(self, tl_id):
         for lane_id in self.get_tl_incoming_lanes(tl_id):
             for veh_id in self.get_lane_veh_ids(lane_id):
-                # if self.get_veh_dist_from_junction(veh_id) <= self.args["con_range"]:
                 yield veh_id
+
+    ####################################################################################################################
+    ####################################################################################################################
+
+    # Log info
+
+    def log_info(self):
+        return {
+            "id": type(self).__name__.lower()
+        }
