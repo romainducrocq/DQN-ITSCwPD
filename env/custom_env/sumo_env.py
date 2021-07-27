@@ -88,6 +88,7 @@ class SumoEnv:
         self.veh_n = 0
         self.flow = []
         self.con_p_rate = 1.
+        self.ctrl_con_p_rate = 1.
         self.veh_n_p_hour = []
 
         """
@@ -419,8 +420,8 @@ class SumoEnv:
             np.random.seed(self.ep_count)
 
     def con_penetration_rate(self):
-        con_p_rate = random.randint(1, 10) / 10
-        return con_p_rate if self.rnd[0] else self.args["con_penetration_rate"]
+        self.ctrl_con_p_rate = random.randint(1, 10) / 10
+        return self.ctrl_con_p_rate if self.rnd[0] else self.args["con_penetration_rate"]
 
     """
     def lambda_veh_p_second(self, veh_p_s):
@@ -546,6 +547,7 @@ class SumoEnv:
             "id": type(self).__name__.lower(),
             "ep": self.ep_count,
             "con_p_rate": self.con_p_rate,
+            "ctrl_con_p_rate": self.ctrl_con_p_rate,
             "veh_n_p_hour": json.dumps(self.veh_n_p_hour),
             "veh_n": veh_n,
             "sum_delay": sum_delay,
