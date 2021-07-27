@@ -19,14 +19,16 @@ SUMO_PARAMS = {
     "steps": 3600,
     "delay": 0,
     "gui": True,
-    "rnd": True,
-    "seed": False,
+    "rnd": (False, True),
+    "seed": True,
 
     "v_type_def": "def",
     "v_type_con": "con",
     "v_length": 5,
     "v_min_gap": 2.5,
     "v_max_speed": 16.67,
+
+    "veh_p_hour": [200, 800, 800, 200],
 
     "con_penetration_rate": 1.,
     "con_range": 160,

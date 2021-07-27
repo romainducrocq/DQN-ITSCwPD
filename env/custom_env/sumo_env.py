@@ -38,7 +38,7 @@ class SumoEnv:
     def clip(min_clip, max_clip, x):
         return max(min_clip, min([max_clip, x])) if min_clip < max_clip else x
 
-    def __init__(self, gui=False, rnd=False):
+    def __init__(self, gui=False, rnd=(False, False)):
         self.args = SUMO_PARAMS
 
         self.gui = False
@@ -97,7 +97,7 @@ class SumoEnv:
 
         self.params = self.set_params()
 
-        self.seed_count = 0
+        self.ep_count = 0
 
     def set_params(self):
         params = [
@@ -404,12 +404,11 @@ class SumoEnv:
 
     def set_seed(self):
         if self.args["seed"]:
-            self.seed_count += 1
-            random.seed(self.seed_count)
-            np.random.seed(self.seed_count)
+            random.seed(self.ep_count)
+            np.random.seed(self.ep_count)
 
     def con_penetration_rate(self):
-        if self.rnd:
+        if self.rnd[0]:
             return random.randint(1, 10) / 10
         else:
             return self.args["con_penetration_rate"]
@@ -421,10 +420,10 @@ class SumoEnv:
         return 3600 / veh_p_h
 
     def insert_lambdas(self):
-        if self.rnd:
+        if self.rnd[1]:
             return [self.lambda_veh_p_hour(random.randint(1, 10) * 100) for _ in self.flow_logic]
         else:
-            return [self.lambda_veh_p_hour(f) for f in [200, 800, 800, 200]]
+            return [self.lambda_veh_p_hour(f) for f in self.args["veh_p_hour"]]
 
     def update_flow_logic(self):
         self.set_seed()
@@ -491,6 +490,7 @@ class SumoEnv:
 
             if gen:
                 self.veh_n = 0
+                self.ep_count += 1
                 self.update_flow_logic()
                 for t, rou, co in self.flow:
                     self.veh_n += 1

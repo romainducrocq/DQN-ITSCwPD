@@ -14,7 +14,7 @@ class DqnEnv:
 
         # """CHANGE ENV CONSTRUCT HERE""" ##############################################################################
         if self.mode["train"]:
-            self.sumo_env = RLController(gui=False, rnd=True)
+            self.sumo_env = RLController(gui=False, rnd=(True, True))
         elif self.mode["observe"]:
             self.sumo_env = RLController(gui=SUMO_PARAMS["gui"], rnd=SUMO_PARAMS["rnd"])
         elif self.mode["play"]:
