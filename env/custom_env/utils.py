@@ -20,7 +20,7 @@ SUMO_PARAMS = {
     "delay": 0,
     "gui": True,
     "log": True,
-    "rnd": (False, True),
+    "rnd": (True, True),
     "seed": True,
 
     "v_type_def": "def",

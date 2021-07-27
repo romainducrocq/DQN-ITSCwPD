@@ -232,12 +232,6 @@ class SumoEnv:
     def get_veh_speed(self, veh_id):
         return traci.vehicle.getSpeed(veh_id)
 
-    def get_veh_waiting_time(self, veh_id):
-        return traci.vehicle.getWaitingTime(veh_id)
-
-    def get_veh_accumulated_waiting_time(self, veh_id):
-        return traci.vehicle.getAccumulatedWaitingTime(veh_id)
-
     def get_veh_lane(self, veh_id):
         return traci.vehicle.getLaneID(veh_id)
 
@@ -246,6 +240,15 @@ class SumoEnv:
 
     def get_veh_dist_from_junction(self, veh_id):
         return self.get_lane_length(self.get_veh_lane(veh_id)) - self.get_veh_pos_on_lane(veh_id)
+
+    def get_veh_waiting_time(self, veh_id):
+        return traci.vehicle.getWaitingTime(veh_id)
+
+    def get_veh_accumulated_waiting_time(self, veh_id):
+        return traci.vehicle.getAccumulatedWaitingTime(veh_id)
+
+    def get_veh_delay(self, veh_id):
+        return 1 - (self.get_veh_speed(veh_id) / self.args["v_max_speed"])
 
     ####################################################################################################################
     ####################################################################################################################
@@ -524,8 +527,32 @@ class SumoEnv:
     # Log info
 
     def log_info(self):
+        veh_n = 0
+        sum_delay, sum_waiting_time, sum_queue_length = 0, 0, 0
+
+        for tl_id in self.tl_ids:
+            for veh_id in self.yield_tl_vehs(tl_id):
+                veh_n += 1
+                sum_delay += self.get_veh_delay(veh_id)
+                wt = self.get_veh_waiting_time(veh_id)
+                sum_waiting_time += wt
+                if wt:
+                    sum_queue_length += 1
+
+        avg_delay = 0 if veh_n == 0 else sum_delay / veh_n
+        avg_waiting_time = 0 if veh_n == 0 else sum_waiting_time / veh_n
+        avg_queue_length = sum_queue_length / len(self.get_all_incoming_lanes())
+
         return {
             "id": type(self).__name__.lower(),
+            "ep": self.ep_count,
             "con_p_rate": self.con_p_rate,
-            "veh_n_p_hour": self.veh_n_p_hour
+            "veh_n_p_hour": json.dumps(self.veh_n_p_hour),
+            "veh_n": veh_n,
+            "sum_delay": sum_delay,
+            "sum_waiting_time": sum_waiting_time,
+            "sum_queue_length": sum_queue_length,
+            "avg_delay": avg_delay,
+            "avg_waiting_time": avg_waiting_time,
+            "avg_queue_length": avg_queue_length
         }
