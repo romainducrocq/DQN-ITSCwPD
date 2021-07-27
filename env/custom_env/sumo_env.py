@@ -508,8 +508,10 @@ class SumoEnv:
     def is_veh_con(self, veh_id):
         return self.get_veh_type(veh_id) == self.args["v_type_con"]
 
+    """
     def get_veh_con_on_edge(self, edge_id):
         return [veh_id for veh_id in self.get_edge_veh_ids(edge_id) if self.is_veh_con(veh_id)]
+    """
 
     def yield_tl_vehs(self, tl_id):
         for lane_id in self.get_tl_incoming_lanes(tl_id):

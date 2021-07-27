@@ -88,7 +88,8 @@ class MaxPressureBaseline(BaselineMeta):
         self.scheduler, self.next_tl_id = None, None
 
     def pressure(self, li, lo):
-        return sum([self.get_lane_veh_n(l) for l in li]) - sum([self.get_lane_veh_n(l) for l in lo])
+        # return sum([self.get_lane_veh_n(l) for l in li]) - sum([self.get_lane_veh_n(l) for l in lo])
+        return sum([self.get_lane_veh_con_n(l) for l in li]) - sum([self.get_lane_veh_con_n(l) for l in lo])
 
     def max_pressure(self, tl_id):
         return self.tl_logic[tl_id]["act"][SumoEnv.arg_max([
@@ -145,6 +146,14 @@ class MaxPressureBaseline(BaselineMeta):
                     self.next_tl_id = tl_id
                     return
 
+    ####################################################################################################################
+    ####################################################################################################################
+
+    # Connected vehicles
+
+    def get_lane_veh_con_n(self, lane_id):
+        return sum([1 for veh_id in self.get_lane_veh_ids(lane_id) if self.is_veh_con(veh_id)])
+
 
 class SotlBaseline(BaselineMeta):
     def __init__(self, *args, **kwargs):
@@ -174,12 +183,14 @@ class SotlBaseline(BaselineMeta):
 
             for tl_id in self.tl_ids:
                 for l in self.get_red_tl_incoming_lanes(tl_id):
-                    self.kappa[tl_id] += self.get_lane_veh_n_in_dist(l, self.r_dist)
+                    # self.kappa[tl_id] += self.get_lane_veh_n_in_dist(l, self.r_dist)
+                    self.kappa[tl_id] += self.get_lane_veh_con_n_in_dist(l, self.r_dist)
 
     def step(self, action):
         tl_id = self.next_tl_id
 
-        n = sum([self.get_lane_veh_n_in_dist(l, self.g_dist) for l in self.get_green_tl_incoming_lanes(tl_id)])
+        # n = sum([self.get_lane_veh_n_in_dist(l, self.g_dist) for l in self.get_green_tl_incoming_lanes(tl_id)])
+        n = sum([self.get_lane_veh_con_n_in_dist(l, self.g_dist) for l in self.get_green_tl_incoming_lanes(tl_id)])
 
         if 0 < n <= self.mu or self.kappa[tl_id] <= self.theta:
             self.scheduler.push(self.tg, (tl_id, None))
@@ -205,7 +216,8 @@ class SotlBaseline(BaselineMeta):
 
                 for tl_id in self.tl_ids:
                     for l in self.get_red_tl_incoming_lanes(tl_id):
-                        self.kappa[tl_id] += self.get_lane_veh_n_in_dist(l, self.r_dist)
+                        # self.kappa[tl_id] += self.get_lane_veh_n_in_dist(l, self.r_dist)
+                        self.kappa[tl_id] += self.get_lane_veh_con_n_in_dist(l, self.r_dist)
 
             else:
                 tl_id, new_p = tl_evt
@@ -220,3 +232,14 @@ class SotlBaseline(BaselineMeta):
                 else:
                     self.next_tl_id = tl_id
                     return
+
+    ####################################################################################################################
+    ####################################################################################################################
+
+    # Connected vehicles
+
+    def get_lane_veh_con_n_in_dist(self, lane_id, dist):
+        return sum(
+            [1 for veh_id in self.get_lane_veh_ids(lane_id)
+             if self.is_veh_con(veh_id) and (self.get_lane_length(lane_id) - self.get_veh_pos_on_lane(veh_id)) <= dist]
+        )
