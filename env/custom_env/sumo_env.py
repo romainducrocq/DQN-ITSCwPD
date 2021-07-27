@@ -88,6 +88,7 @@ class SumoEnv:
         self.veh_n = 0
         self.flow = []
         self.con_p_rate = 1.
+        self.veh_n_p_hour = []
 
         """
         self.update_flow_logic()
@@ -175,6 +176,11 @@ class SumoEnv:
 
     def set_phase_duration(self, tl_id, dur):
         traci.trafficlight.setPhaseDuration(tl_id, dur)
+
+    def yield_tl_vehs(self, tl_id):
+        for lane_id in self.get_tl_incoming_lanes(tl_id):
+            for veh_id in self.get_lane_veh_ids(lane_id):
+                yield veh_id
 
     # lane
 
@@ -414,8 +420,10 @@ class SumoEnv:
         else:
             return self.args["con_penetration_rate"]
 
+    """
     def lambda_veh_p_second(self, veh_p_s):
         return 1 / veh_p_s
+    """
 
     def lambda_veh_p_hour(self, veh_p_h):
         return 3600 / veh_p_h
@@ -434,7 +442,8 @@ class SumoEnv:
 
         """"""
         lambdas = self.insert_lambdas()
-        print("\n--- con:", self.con_p_rate, ", flow:", [3600 / l for l in lambdas], "---\n")
+        self.veh_n_p_hour = [3600 / l for l in lambdas]
+        print("\n--- con:", self.con_p_rate, ", flow:", self.veh_n_p_hour, "---\n")
         """"""
 
         for i, e in enumerate(sorted([e for e in self.flow_logic])):
@@ -509,11 +518,6 @@ class SumoEnv:
     def is_veh_con(self, veh_id):
         return self.get_veh_type(veh_id) == self.args["v_type_con"]
 
-    def yield_tl_vehs(self, tl_id):
-        for lane_id in self.get_tl_incoming_lanes(tl_id):
-            for veh_id in self.get_lane_veh_ids(lane_id):
-                yield veh_id
-
     ####################################################################################################################
     ####################################################################################################################
 
@@ -521,5 +525,7 @@ class SumoEnv:
 
     def log_info(self):
         return {
-            "id": type(self).__name__.lower()
+            "id": type(self).__name__.lower(),
+            "con_p_rate": self.con_p_rate,
+            "veh_n_p_hour": self.veh_n_p_hour
         }
