@@ -18,7 +18,7 @@ SUMO_PARAMS = {
 
     "steps": 3600,
     "delay": 0,
-    "gui": True,
+    "gui": False,
     "log": True,
     "rnd": (True, True),
     "seed": True,
