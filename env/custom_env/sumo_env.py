@@ -418,10 +418,8 @@ class SumoEnv:
             np.random.seed(self.ep_count)
 
     def con_penetration_rate(self):
-        if self.rnd[0]:
-            return random.randint(1, 10) / 10
-        else:
-            return self.args["con_penetration_rate"]
+        con_p_rate = random.randint(1, 10) / 10
+        return con_p_rate if self.rnd[0] else self.args["con_penetration_rate"]
 
     """
     def lambda_veh_p_second(self, veh_p_s):
@@ -432,10 +430,8 @@ class SumoEnv:
         return 3600 / veh_p_h
 
     def insert_lambdas(self):
-        if self.rnd[1]:
-            return [self.lambda_veh_p_hour(random.randint(1, 10) * 100) for _ in self.flow_logic]
-        else:
-            return [self.lambda_veh_p_hour(f) for f in self.args["veh_p_hour"]]
+        lambdas = [self.lambda_veh_p_hour(random.randint(1, 10) * 100) for _ in self.flow_logic]
+        return lambdas if self.rnd[1] else [self.lambda_veh_p_hour(f) for f in self.args["veh_p_hour"]]
 
     def update_flow_logic(self):
         self.set_seed()
