@@ -420,8 +420,8 @@ class SumoEnv:
             np.random.seed(self.ep_count)
 
     def con_penetration_rate(self):
-        self.ctrl_con_p_rate = random.randint(1, 10) / 10
-        return self.ctrl_con_p_rate if self.rnd[0] else self.args["con_penetration_rate"]
+        self.ctrl_con_p_rate = random.randint(100, 1000) / 1000
+        return round(self.ctrl_con_p_rate, 1) if self.rnd[0] else self.args["con_penetration_rate"]
 
     """
     def lambda_veh_p_second(self, veh_p_s):
