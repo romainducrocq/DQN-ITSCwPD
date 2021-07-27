@@ -2,7 +2,7 @@
 
 function run () {
 
-tensorboard --logdir ./logs/train/1tls_4x4/
+tensorboard --logdir ./logs/train/1tls_3x3/
 
 }
 
