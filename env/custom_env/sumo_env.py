@@ -106,7 +106,8 @@ class SumoEnv:
             SUMO_HOME + "bin/sumo" + ("-gui" if self.gui else ""), "-c",
             self.data_dir + self.config + ".sumocfg",
             "--tripinfo-output", self.data_dir + "tripinfo.xml",
-            "--time-to-teleport", str(self.args["steps"])
+            "--time-to-teleport", str(self.args["steps"]),
+            "--waiting-time-memory", str(self.args["steps"])
         ]
 
         if self.gui:
@@ -524,7 +525,7 @@ class SumoEnv:
 
     def log_info(self):
         veh_n = 0
-        sum_delay, sum_waiting_time, sum_queue_length = 0, 0, 0
+        sum_delay, sum_waiting_time, sum_queue_length, sum_acc_waiting_time = 0, 0, 0, 0
 
         for tl_id in self.tl_ids:
             for veh_id in self.yield_tl_vehs(tl_id):
@@ -532,11 +533,13 @@ class SumoEnv:
                 sum_delay += self.get_veh_delay(veh_id)
                 wt = self.get_veh_waiting_time(veh_id)
                 sum_waiting_time += wt
-                if wt:
+                sum_acc_waiting_time += self.get_veh_accumulated_waiting_time(veh_id)
+                if wt > 0:
                     sum_queue_length += 1
 
         avg_delay = 0 if veh_n == 0 else sum_delay / veh_n
         avg_waiting_time = 0 if veh_n == 0 else sum_waiting_time / veh_n
+        avg_acc_waiting_time = 0 if veh_n == 0 else sum_acc_waiting_time / veh_n
         avg_queue_length = sum_queue_length / len(self.get_all_incoming_lanes())
 
         return {
@@ -547,8 +550,10 @@ class SumoEnv:
             "veh_n": veh_n,
             "sum_delay": sum_delay,
             "sum_waiting_time": sum_waiting_time,
+            "sum_acc_waiting_time": sum_acc_waiting_time,
             "sum_queue_length": sum_queue_length,
             "avg_delay": avg_delay,
             "avg_waiting_time": avg_waiting_time,
+            "avg_acc_waiting_time": avg_acc_waiting_time,
             "avg_queue_length": avg_queue_length
         }
