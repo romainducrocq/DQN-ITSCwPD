@@ -420,7 +420,7 @@ class SumoEnv:
             np.random.seed(self.ep_count)
 
     def con_penetration_rate(self):
-        self.ctrl_con_p_rate = random.randint(100, 1000) / 1000
+        self.ctrl_con_p_rate = random.randint(0, 1000) / 1000
         return self.ctrl_con_p_rate if self.rnd[0] else self.args["con_penetration_rate"]
 
     """
