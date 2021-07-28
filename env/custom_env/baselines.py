@@ -89,7 +89,8 @@ class MaxPressureBaseline(BaselineMeta):
 
     def pressure(self, li, lo):
         # return sum([self.get_lane_veh_n(l) for l in li]) - sum([self.get_lane_veh_n(l) for l in lo])
-        return sum([self.get_lane_veh_con_n(l) for l in li]) - sum([self.get_lane_veh_con_n(l) for l in lo])
+        return sum([self.get_lane_veh_con_n_in_dist_in(l, self.args["con_range"]) for l in li]) \
+               - sum([self.get_lane_veh_con_n_in_dist_out(l, self.args["con_range"]) for l in lo])
 
     def max_pressure(self, tl_id):
         return self.tl_logic[tl_id]["act"][SumoEnv.arg_max([
@@ -150,6 +151,18 @@ class MaxPressureBaseline(BaselineMeta):
     ####################################################################################################################
 
     # Connected vehicles
+
+    def get_lane_veh_con_n_in_dist_in(self, lane_id, dist):
+        return sum(
+            [1 for veh_id in self.get_lane_veh_ids(lane_id)
+             if self.is_veh_con(veh_id) and (self.get_lane_length(lane_id) - self.get_veh_pos_on_lane(veh_id)) <= dist]
+        )
+
+    def get_lane_veh_con_n_in_dist_out(self, lane_id, dist):
+        return sum(
+            [1 for veh_id in self.get_lane_veh_ids(lane_id)
+             if self.is_veh_con(veh_id) and self.get_veh_pos_on_lane(veh_id) <= dist]
+        )
 
     def get_lane_veh_con_n(self, lane_id):
         return sum([1 for veh_id in self.get_lane_veh_ids(lane_id) if self.is_veh_con(veh_id)])
