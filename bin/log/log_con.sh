@@ -11,7 +11,7 @@ python3 observe.py -d save/$SAVE/DuelingDoubleDQNAgent_lr0.0001_model.pack -max_
 
 }
 
-cd ..
+cd ../..
 
 source venv/bin/activate
 
