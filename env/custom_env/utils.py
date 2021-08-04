@@ -14,14 +14,14 @@ CONFIGS_MULTI = [
 ]
 
 SUMO_PARAMS = {
-    "config": CONFIGS_MULTI[3],
+    "config": CONFIGS_SIMPLE[1],
 
     "steps": 3600,
     "delay": 0,
-    "gui": False,
-    "log": True,
+    "gui": True,
+    "log": False,
     "rnd": (True, True),
-    "seed": True,
+    "seed": False,
 
     "v_type_def": "def",
     "v_type_con": "con",
