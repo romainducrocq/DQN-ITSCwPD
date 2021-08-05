@@ -31,7 +31,8 @@ make: `cd bin/ && bash make.sh`
 
 ### Demo
 
-![Demo 2 gif](demo/demo_2.gif)  
+![Demo 2 gif](demo/demo_1.gif)  
 
-![Demo 5 gif](demo/demo_5.gif)  
+![Demo 5 gif](demo/demo_2.gif)  
 
+![Demo tensorboard png](demo/demo_tensorboard.png)  

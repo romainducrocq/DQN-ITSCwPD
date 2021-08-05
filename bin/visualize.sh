@@ -2,9 +2,7 @@
 
 function run () {
 
-SAVE="1tls_3x3"
-
-tensorboard --logdir ./logs/train/$SAVE/
+tensorboard --logdir ./logs/train/
 
 }
 
