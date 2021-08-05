@@ -31,6 +31,7 @@ make: `cd bin/ && bash make.sh`
 
 ### Demo
 
-![Demo gif](demo/demo.gif)  
+![Demo 2 gif](demo/demo_2.gif)  
 
+![Demo 5 gif](demo/demo_5.gif)  
 
