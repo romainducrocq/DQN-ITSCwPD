@@ -26,3 +26,11 @@ make: `cd bin/ && bash make.sh`
 > mkdir sumo/build/cmake-build && cd sumo/build/cmake-build  
 > cmake ../..  
 > make -j$(nproc)  
+
+****
+
+### Demo
+
+![Demo gif](demo/demo.gif)  
+
+
