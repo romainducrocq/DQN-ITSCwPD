@@ -1,0 +1,17 @@
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+In this master thesis, we presented the work conducted to address the problematic: \textit{Deep Reinforcement Q-Learning for Intelligent Traffic Signal Control with Partial Detection}.\\
+
+As part of this study and detailed within this report, we proposed two novel contributions: \\
+
+(1) In the first chapter, we presented frameworQ, a python framework for applying deep Q-learning algorithms in customized environments. Aiming at facilitating RL research applications, the algorithms are abstracted from the end users, allowing to generate results faster by putting the focus on designing environments and their action/observation/reward functions, and hyper-parameter tuning; while a set of ready-to-use tools enable to train, test, visualize and compare DQN agents. Four DQN algorithms are implemented; i.e.  vanilla, double, dueling and Per DQN; and combined with further optimizations, e.g. multi-processing training, in the Per3DQN+ algorithm. The proof of concept was demonstrated with two toy customized environments, both achieving expert level performances. \\
+
+(2) In the second chapter, we presented DQN-ITSCwPD, a model for deep Q-learning traffic signal control at single intersections with partial detection over connected vehicles; implemented within frameworQ, with Per3DQN+ and a Sumo customized environment. We introduced a new state representation for partially observable environments, partial DTSE; and a new reward function for TSC, total squared delay. Additionally, we provided tuned values for the convolutional dueling DQN architecture and the hyper-parameters. The model was evaluated against two existing actuated TSC algorithms, Max Pressure and SOTL, in a two-step comparative analysis on four traffic key performance indicators. As a result, we concluded the model to be more efficient than the baselines for 4-phases TL programs in full detection, and estimated partial detection performance thresholds for CV penetration rates, with acceptability at $p_{cv} \in [0.2,0.3]$ and optimality at $p_{cv} \in [0.4,0.5]$. \\
+
+Lastly, on a personal note, this project was for me the opportunity to explore a research topic, practice the research methodology and acquire skills to pursue research activities.
+During this internship, I learned to formalise a research problematic, and to identify the adequate literature and tools to address it. I also learned to read and reproduce scientific papers in depth, and implement complex models, algorithms and methods. Furthermore, I learned to perform numerical tests and experiments to evaluate propositions and estimate performances against benchmarks. And most of all, I learned to lead a project, for which I have been entrusted with the responsibility and autonomy, from the beginning to the end. \\
+
+I would like to thank my supervisor, Dr. Nadir Farhi, and the team at GRETTIA, UGE.
+
+\pagebreak

@@ -1,0 +1,27 @@
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+This master thesis presents the research project conducted during my internship at the laboratory  IFSTTAR-COSYS-GRETTIA, Univ Gustave Eiffel, in the five months from the 05.04.2021 to the 29.08.2021. This work is directed by Dr. Nadir Farhi, and is submitted for the Master's degree in Computer Science, Intelligent Systems and Applications. \\
+
+\noindent\rule{\textwidth}{1pt}
+\\
+
+Traffic congestion poses serious economical and social problems; long travelling times, fuel consumption and air pollution; and inefficient traffic signals are significant underlying root causes to the issue. Latest research have approached the traffic signal control problem with deep reinforcement Q-learning methods, combining reinforcement learning and deep learning, to model adaptive controllers using traffic parameters at intersections. Moreover, connected vehicles, able to transmit information to infrastructures with cost-effective communication devices, will be largely deployed on roads in the near future.
+Thereby, this presentation hereinafter formulates and addresses the problematic: \textit{Deep Reinforcement Q-Learning for Intelligent Traffic Signal Control with Partial Detection}.\\
+
+This subject is covered throughout two chapters, each one proposing a novel contribution: \\
+
+(1) In the first chapter, we introduce deep reinforcement Q-learning and implementations. First, we present the background and theoretical foundations for reinforcement learning and tabular Q-learning methods. Then, we present deep Q-learning, the deep Q-network, and four DQN algorithms; i.e. vanilla, double, dueling and prioritized experience replay. Finally, we present (the first contribution) frameworQ, a python framework for applying deep Q-learning algorithms in customized environments, with the Per3DQN+ algorithm.
+\\
+
+(2) In the second chapter, we apply deep reinforcement Q-learning to traffic signal control. First, we present the formulation of the problem, a literature review of related work, and the Sumo simulation tool. Then, we present (the second contribution) DQN-ITSCwPD, a model for deep Q-learning traffic signal control at single intersections with partial detection over connected vehicles; and its implementation within frameworQ. Finally, we present the results of the proposed model in a comparative analysis against baselines, and its performances with respect to the proportions of connected vehicles in the traffic flow.
+\\ 
+
+\textit{Nota bene:} The code repositories for the two contributions are available on Github, at:
+\begin{enumerate}
+\setlength\itemsep{-0.5em}
+    \item \underline{frameworQ}: \textbf{\url{https://github.com/romainducrocq/frameworQ}}
+    \item \underline{DQN-ITSCwPD}: \textbf{\url{https://github.com/romainducrocq/DQN-ITSCwPD}}
+\end{enumerate}
+
+\pagebreak

@@ -1,0 +1,156 @@
+%========== Preamble ==========
+% Document class
+\documentclass[a4paper,12pt,dvipsnames]{scrartcl}
+
+% Document information
+\usepackage[
+	pdftitle={},
+	pdfsubject={},
+	pdfauthor={},
+	pdfkeywords={},
+	pdftex=true,
+	colorlinks=true,
+	breaklinks=true,
+	citecolor=black,
+	linkcolor=black,
+	menucolor=black,
+	urlcolor=black
+]{hyperref}
+
+% Standard Packages
+\usepackage[utf8]{inputenc}	% Sets the encoding of the file and allows the input of umlauts
+\usepackage[T1]{fontenc}    % Font				
+\usepackage[francais,english]{babel} % (American) English spelling
+
+% Other stuff
+\usepackage{pdfcomment} % comment PDFs
+\usepackage{todonotes} % ToDo-Notes in LaTeX
+\usepackage{mdwlist} % Interruption in lists
+\usepackage{abstract} % Creates an abstract
+
+% Text formatting
+\usepackage[normalem]{ulem} % Text highlighting (better not to use soul: it hasn't been updated for a long time!)
+\usepackage[autostyle=true,english=american]{csquotes} % Package for the formatting of quotation marks
+\renewcommand{\mkblockquote}[4]{\enquote{#1}#2\ifterm{\relax}{#3}#4} % Quotation marks for \blockquote
+\renewcommand{\mkcitation}[1]{#1} % Correct depiction of footnotes with \blockquote
+\usepackage{ragged2e} % New switches and environments to change the text alignment
+%\setlength{\textheight}{12.86cm} % Text height 
+\interfootnotelinepenalty10000  % Footnotes are displayed on the page on which the footnote appears in the text
+\setlength{\parindent}{0cm} % Removes the default indentation from text
+
+% Line spacing
+\usepackage{setspace} % Package for changing the line spacing within the text
+\expandafter\def\expandafter\quotation\expandafter{\quote\singlespacing} % Single line spacing in long quotations
+\onehalfspacing % 1.5 times line spacing throughout the document
+%\renewcommand{\baselinestretch}{1.5} % Line spacing 
+%\setlength{\footnotesep}{10.0pt} % Spacing between footnote and text 
+
+% Avoiding orphan lines and widow lines
+\clubpenalty = 10000
+\widowpenalty = 10000 
+\displaywidowpenalty = 10000
+
+% Math stuff
+\usepackage{amsmath,amsfonts,amssymb} % Package for mathematical environments (such as formula designs, etc.) 
+\usepackage{array} % Package for generating matrices (defines position and columns)
+\usepackage{textcomp} % Package for generating additional symbol characters 
+
+% Colors
+\usepackage{xcolor}
+
+% Graphics
+\usepackage{graphicx} % Insert graphics
+\usepackage{svg} % insert .svg's
+\usepackage{float} % Package for determining the position of tables/illustrations
+\usepackage[clockwise]{rotating} % Rotation of images & tables
+
+% TikZ
+\usepackage{tikz}
+
+% Packages for creating tables
+\usepackage{tabularx} % Package for designing tables (setting a table width, automatic line break,...)
+\usepackage{booktabs} % The main focus of booktabs is on the design of the horizontal lines within a table  
+\usepackage{multirow} % Package that enables the merging of cells in a table
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\RaggedLeft\arraybackslash}p{#1}}
+
+% Source of Figures & Tables ; captions
+\usepackage{caption} % Captions
+\captionsetup{format=plain,justification=RaggedRight,singlelinecheck=false}
+\usepackage{capt-of}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage[rightcaption]{sidecap}
+\captionsetup[table]{justification=centerlast}
+
+% Page formatting
+\usepackage[left= 3cm, right= 2cm, bottom= 2.5cm, top= 2.5cm]{geometry} % Side distances
+\usepackage{pdflscape} % Package for page rotation
+
+% Change Headline Font Size and Type
+\addtokomafont{disposition}{\rmfamily}
+%\setkomafont{chapter}{\rmfamily\LARGE\bfseries} % Not necessary for the class 'scrartcl'
+\setkomafont{section}{\rmfamily\Large\bfseries}
+\setkomafont{subsection}{\rmfamily\large\bfseries}
+
+% Custom Date format
+\usepackage{datetime}
+\newdateformat{myformat}{\THEDAY{. }\monthname[\THEMONTH] \THEYEAR}
+
+\usepackage{xurl} % url 
+\usepackage{algorithm,algorithmic,algorithm2e} % algorithmic
+\usepackage{siunitx}
+\sisetup{output-exponent-marker=\ensuremath{\mathrm{e}}} % scientific notation
+
+% Header & Footer
+%\usepackage{fancyhdr}
+%\pagestyle{fancy} % Has to be before \renewcommand{\chaptermark} 
+%\fancyhf{} % Cleans header & footer 
+%\fancyfoot[L]{} % Left
+%\fancyfoot[C]{\thepage} % Middle
+%\fancyfoot[R]{} % Right
+%\renewcommand{\chaptermark}[1]{
+%	\markboth{Kapitel \thechapter{}: #1}{}}
+%\renewcommand{\sectionmark}[1]{
+%	\markright{\thesection{} #1}}
+%\renewcommand{\headrulewidth}{0pt} % Thickness of the dividing line at the top
+
+% List of tables and figures according to the chair template
+\usepackage{tocloft}
+\renewcommand{\cftfigpresnum}{Figure }
+\renewcommand{\cfttabpresnum}{Table }
+
+\renewcommand{\cftfigaftersnum}{:}
+\renewcommand{\cfttabaftersnum}{:}
+
+\setlength{\cftfignumwidth}{3cm}
+\setlength{\cfttabnumwidth}{2,5cm}
+
+\setlength{\cftfigindent}{0,5cm}
+\setlength{\cfttabindent}{0,5cm}
+
+% Citation
+\usepackage[authordate,backend=biber, doi=false, isbn=false, footmarkoff]{biblatex-chicago}
+% Adding the literature
+\addbibresource{Literature.bib}
+
+%========== Begin of the document ==========
+\begin{document}
+
+% Titlepage
+\input{Titlepage.tex}
+
+\selectlanguage{english} % Selects english as the default language
+
+% Table of Contents
+\newpage % Creates a new page
+\pagenumbering{arabic} % Switch to Arabic page numbering
+\setcounter{page}{1} % Reset page numbers to 1	
+\tableofcontents % Creates Table of Contents
+
+% Main part
+\newpage % Creates a new page
+\input{Outline.tex} %  In the Outline.tex file, all chapters and subchapters are loaded for better clarity and structure. The main.tex file is used only for basic settings in this configuration. If you don't like this, you can replace this line with the content of the Outline.tex file.
+
+\end{document}
+%========== End of the document ==========
