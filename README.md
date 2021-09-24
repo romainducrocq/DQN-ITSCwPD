@@ -27,7 +27,7 @@ make: `cd bin/ && bash make.sh`
 > (venv) pip3 install gym torch tensorboard 'msgpack==1.0.2' wheel --no-cache-dir  
 
 5. Sumo:  
-> cd venv/ && git clone --recursive https://github.com/eclipse/sumo && rm -rv $(find sumo/ -iname "*.git*")  
+> cd venv/ && git clone --recursive https<area>://github<area>.com/eclipse/sumo && rm -rv $(find sumo/ -iname "*.git*")  
 > mkdir sumo/build/cmake-build && cd sumo/build/cmake-build  
 > cmake ../..  
 > make -j$(nproc)  
