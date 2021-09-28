@@ -147,7 +147,7 @@ and the target $Q$-network $\widehat{Q}$ is updated by Polyak updates \cite{lill
 
 \subsubsection{The replay memory} $D$ stores the $N$ last transitions, and the online $Q$-network $Q$ is updated by back propagation on a batch $U(D)$ of $M$ past transitions $(s,a,s',r')_m$ drawn uniformly at random from $D$, with Huber Loss over TD errors
 \[ 
-L(\delta) = \frac{1}{2M}\sum_{m=1}^M
+L = \frac{1}{2M}\sum_{m=1}^M
 \begin{cases}
   (\delta_m)^2 & \text{if } |\delta_m| < 1 \\
   2 \cdot |\delta_m| - 1 & \text{else}
@@ -175,11 +175,11 @@ and with Adam optimization \cite{kingma2017adam} on the derived gradient $\Delta
             \STATE Sample batch $U(D)$ of $M$ transitions $(s,a,s',r')_m$;
             \FOR{m = 1:M}
                 \bindent
-                \STATE Set double TD error $\delta_{m,t}$;
+                \STATE Set double TD error $\delta_m$;
                 \eindent
             \ENDFOR
             \STATE Update online $Q$-network $Q$ with Adam optimization \\
-            on Huber loss $L_t(\delta_t)$ w.r.t. weights $\Theta_t$, gradient $\Delta_t$;
+            on Huber loss $L_t$ w.r.t. weights $\Theta_t$ and gradient $\Delta_t$;
             \STATE Soft update target $Q$-network $\widehat{Q}$ with Polyak update;
             \STATE Decay $\epsilon$ with exponential decay, increment step $t$;
             \eindent
