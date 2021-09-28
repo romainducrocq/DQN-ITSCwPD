@@ -29,7 +29,7 @@
 
 \usepackage[backend=bibtex,bibstyle=ieee,citestyle=numeric-comp]{biblatex}
 \renewcommand*{\bibfont}{\footnotesize}
-\addbibresource{References.bib}
+\addbibresource{tits.bib}
 
 \markboth{September 2021}
 {Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
@@ -56,10 +56,10 @@ Most propositions in the literature however consider that all vehicles at the in
 Recently, new wireless communication technologies have enabled cost-efficient detection of connected vehicles by infrastructures.
 With only a small fraction of the total fleet currently equipped, methods able to perform under low detection rates are desirable.
 
-In this paper, we propose a deep reinforcement Q-learning model to optimize traffic signal control at an isolated intersection in a partially observable environment with connected vehicles. 
+In this paper, we propose a deep reinforcement Q-learning model to optimize traffic signal control at an isolated intersection, in a partially observable environment with connected vehicles. 
 First, we present the novel DQN model within the RL framework. We introduce a new state representation for partially observable environments and a new reward function for traffic signal control, \\ and provide a network architecture and tuned hyper-parameters.
 Second, we evaluate the performances of the model in numerical simulations on multiple scenarios, in two steps. At first in full detection against existing actuated controllers, then in partial detection with loss estimates for proportions of connected vehicles. \\
-Finally, from the results obtained, we define thresholds for detection rates with acceptable and optimal performance levels. 
+Finally, from the obtained results, we define thresholds for detection rates with acceptable and optimal performance levels. 
 
 The source code implementation of the model is available at:
 
@@ -81,11 +81,11 @@ Traffic congestion poses serious economical and social problems; long travelling
 
 \subsubsection{DQN for traffic signal control}
 
-Traffic signal control (TSC) has been addressed by reinforcement learning (RL) methods with Markov chains, dynamic programming, fuzzy logic \cite{alam2015design} and tabular Q-learning. However, the advent of deep Q-learning (DQN) in recent years has enabled to explore many novel TSC applications based on DQN algorithms. Initial studies with simpler models have proven DQN to be efficient for traffic signal control, comparing trained MLP models at isolated intersections with other algorithms from the literature \cite{stevens2016reinforcement,genders2019opensource}. Following studies have build on these models to explore the benefits of complex neural network architectures, with stacked auto encoders, convolutional neural networks and recurrent neural networks \cite{li2016traffic,gao2017adaptative,liang2019deep,wei2018intellilight,vidali2019deep}. Latest work also successfully demonstrated a complete rainbow DQN implementation for TSC, with adaptations of the six DQN extensions \cite{alemzadeh2020adaptative}. Furthermore, a significant portion of the research in the field is dedicated to achieve decentralized coordination between traffic lights, with applications of multi agent reinforcement learning (MARL) over up to 1000 coordinated agents \cite{pol2016coordinated,wei2019presslight,wei2019colight,chen2020toward}. Yet, the main effort in the literature is put on defining state representations and reward functions. Indeed, the complexity of traffic environments leaves these as unresolved questions, with many propositions. \\
+Traffic signal control (TSC) has been addressed by reinforcement learning (RL) methods with Markov chains, dynamic programming, fuzzy logic \cite{alam2015design} and tabular Q-learning. However, the advent of deep Q-learning (DQN) in recent years has enabled to explore many novel TSC applications based on DQN algorithms. Initial studies with simpler models have proven DQN to be efficient for TSC, comparing trained multilayer perceptron models at isolated intersections with other algorithms from the literature \cite{stevens2016reinforcement,genders2019opensource}. Subsequent studies have build on these models to explore the benefits of complex neural network architectures, with stacked auto encoders, convolutional neural networks and recurrent neural networks \cite{li2016traffic,gao2017adaptative,liang2019deep,wei2018intellilight,vidali2019deep}. Latest work also successfully demonstrated a complete rainbow DQN implementation for TSC, with adaptations of the six DQN extensions \cite{alemzadeh2020adaptative}. Furthermore, a significant portion of the research in the field is dedicated to achieve decentralized coordination between traffic lights, with applications of multi agent reinforcement learning (MARL) over up to 1000 coordinated agents \cite{pol2016coordinated,wei2019presslight,wei2019colight,chen2020toward}. Yet, the main effort in the literature is put on defining state representations and reward functions. Indeed, the complexity of traffic environments leaves these definitions as unresolved, with many propositions. \\
 
 \subsubsection{TSC with connected vehicles}
 
-TSC responds to traffic demand based on real time measures of road traffic parameters. While the data are easily recovered in software simulations, real world implementations rely on expensive infrastructures, which exist only at a small fraction of intersections. These are mainly inductive loops under the roads, which allow for macroscopic representations of the traffic, or, in rare cases, radars or video cameras for microscopic descriptions. Most TSC propositions mentioned above require information that are thus difficult to obtain, and are for now mostly inapplicable. However, the rapid  development of IoT has created new technologies applicable for sensing vehicles, such as GPS localization systems, dedicated short ranged communications (DSRC), C-V2X, radio frequency identification, Bluetooth, ultra wide band, Zigbee, and apps (e.g. Google Maps) \cite{nguyen2020estimation,zhang2020using}. These communication devices are cost-effective, and do not require heavy infrastructure set ups. An increasing number of equipped connected vehicles (CV) are thus nowadays able to transmit their positions and speeds to infrastructures, allowing for microscopic partial state representations of intersections. Furthermore, latest research have shown that TSC with partial detection applied to CV penetration rates as low as 20\% can significantly improve traffic conditions for all vehicles \cite{zhang2019partially}. DQN applications for TSC with partial detection over connected vehicles have been little investigated, and are listed by surveys as a gap in the literature and a key future research.
+TSC responds to traffic demand based on real time measures of road traffic parameters. While the data are easily recovered in software simulations, real world implementations rely on expensive infrastructures, which exist only at a small fraction of intersections. These are mainly inductive loops under the roads, which allow for macroscopic representations of the traffic, or, in rare cases, radars or video cameras for microscopic descriptions. Most TSC propositions mentioned above require information that are thus difficult to obtain, and are for now mostly inappropriate. However, the rapid  development of IoT has created new technologies applicable for sensing vehicles, such as GPS localization systems, dedicated short ranged communications (DSRC), C-V2X, radio frequency identification, Bluetooth, ultra wide band, Zigbee, and apps (e.g. Google Maps) \cite{nguyen2020estimation,zhang2020using}. These communication devices are cost-effective, and do not require heavy infrastructure set ups. An increasing number of equipped connected vehicles (CV) are thus nowadays able to transmit their positions and speeds to infrastructures, allowing for microscopic partial state representations of intersections. Furthermore, latest research have shown that TSC with partial detection applied to CV penetration rates as low as 20\% can significantly improve traffic conditions for all vehicles \cite{zhang2019partially}. DQN applications for TSC with partial detection over connected vehicles have been little investigated, and are listed by surveys as a gap in the literature and a key future research.
 
 \subsection{Paper contributions and organization}
 In this paper, we apply a DQN algorithm to explore TSC policy optimization in partially observable traffic environments with limited detection on CVs, and the main contributions are:
@@ -124,33 +124,33 @@ We formulate the problem addressed hereinafter as follows: \\
 % ============================
 
 \subsection{Q-learning background}
-The RL agent in stochastic environment $\varepsilon$ faces a decision making problem formalized as a Markov Decision Process (MDP), and defined by the tuple $<S,A,P,R>$, where $S$ is the continuous state space with state $s \in S$, $A$ is the discrete action space with action $a \in A$, $P$ is the transition dynamics matrix with $p=P(s'|s,a)$ the probability of transitioning to state $s'$ after taking action $a$ in state $s$, $R$ is the reward function with $r'=R(s,a,s')$ the reward of taking action $a$ in state $s$ and transitioning to state $s'$, and the transition is $(s,a,s',r')$.
+The RL agent in stochastic environment $\varepsilon$ faces a decision making problem formalized as a Markov Decision Process (MDP), and defined by the tuple $<\mathcal{S},\mathcal{A},\mathcal{P},\mathcal{R}>$, where $\mathcal{S}$ is the continuous state space with state $s \in \mathcal{S}$, $\mathcal{A}$ is the discrete action space with action $a \in \mathcal{A}$, $\mathcal{P}$ is the transition dynamics matrix with $p=\mathcal{P}(s'|s,a)$ the probability of transitioning to state $s'$ after taking action $a$ in state $s$, $\mathcal{R}$ is the reward function with $r'=\mathcal{R}(s,a,s')$ the reward of taking action $a$ in state $s$ and transitioning to state $s'$, and the transition is $(s,a,s',r')$.
 
 The goal of learning in a MDP is to find a policy $\pi(s)$ mapping from states to actions, that maximizes the cumulative future reward $G_t = \sum_{k=t}^{t+T} \gamma^{(k-t)} \cdot r_{k+1} = r_{t+1} + \gamma \cdot G_{t+1}$, with $\gamma \in [0,1]$ a discount factor and a finite time horizon $T$.
     
-The state-value function $V(s) = \mathbf{E}[G_{t} |s_t=s, \pi]$ estimates expected cumulative future rewards for successive states in the MDP with the Bellman recursion, and the action-value function $Q(s,a)= \mathbf{E}[r_{t+1} + \gamma \cdot V(s_{t+1}) |s_t=s, a_t=a, \pi]$ similarly estimates them for state-action pairs. For an optimal policy $\pi^*(s)$ at each step $t$, the Bellman optimality equation defines the relationship between optimal $V^*$ and $Q^*$ functions as $V^*(s) = \max_a Q^*(s,a)$, and thus the optimal action-value
-\[ Q^*(s,a) = \mathbf{E}[r_{t+1} + \gamma \cdot \max_{a'}Q^*(s_{t+1},a')|s_t=s,a_t=a,\pi^*] \]
+The state-value function $V(s) = \mathbb{E}[G_{t} |s_t=s, \pi]$ estimates expected cumulative future rewards for successive states in the MDP with the Bellman recursion, and the action-value function $Q(s,a)= \mathbb{E}[r_{t+1} + \gamma \cdot V(s_{t+1}) |s_t=s, a_t=a, \pi]$ similarly estimates them for state-action pairs. For an optimal policy $\pi^*(s)$ at each step $t$, the Bellman optimality equation defines the relationship between optimal $V^*$ and $Q^*$ functions as $V^*(s) = \max_a Q^*(s,a)$, and thus the optimal action-value
+\[ Q^*(s,a) = \mathbb{E}[r_{t+1} + \gamma \cdot \max_{a'}Q^*(s_{t+1},a')|s_t=s,a_t=a,\pi^*] \]
 
 Q-learning algorithms approximate the $Q$-function by many iterative updates, with a function approximator $\Theta$ such that $Q(s,a,\Theta) \rightarrow Q^*(s,a)$ when $t \rightarrow \infty$. The agent then learns an optimal policy over time $\pi(s) = arg \max_a Q(s,a,\Theta)$ \cite{sutton2018reinforcement}.
 
 \subsection{3DQN implementation}
 
-Deep Q-learning algorithms approximate the $Q$-function with a neural network, the deep $Q$-network (DQN) \cite{hessel2017rainbow,mnih2013playing,mnih2015human} $Q$ with weights $\Theta$, mapping from one continuous state $s \in S$ in an $|s|$-dimensional input layer to all the discrete $Q$-values $Q(s,a,\Theta) \:\: \forall a \in A$ in an $|A|$-dimensional output layer. Here, we implemented the dueling double DQN (3DQN) algorithm: \\
+Deep Q-learning algorithms approximate the $Q$-function with a neural network, the deep $Q$-network (DQN) \cite{hessel2017rainbow,mnih2013playing,mnih2015human} $Q$ with weights $\Theta$, mapping from one continuous state $s \in \mathcal{S}$ in an $|s|$-dimensional input layer to all the discrete $Q$-values $Q(s,a,\Theta) \:\: \forall a \in \mathcal{A}$ in an $|\mathcal{A}|$-dimensional output layer. Here, we implemented the dueling double DQN (3DQN) algorithm: \\
 
-\subsubsection{The dueling architecture} \cite{wang2016dueling} decouples the state-value function $V(s)$ and the action-advantage function $\Lambda(s,a) = Q(s,a) - V(s)$, into a 1-dimensional value stream $V(s,\theta,\kappa)$ and an $|A|$-dimensional advantage stream $\Lambda(s,a,\theta,\iota) \:\: \forall a \in A$, with weights $(\theta,\kappa,\iota) = \Theta$. The streams are then recombined in a special aggregation layer to produce the $Q$-function with
-\[ Q(s,a,\Theta) = V(s,\theta,\kappa) + (\Lambda(s,a,\theta,\iota) - \frac{1}{|A|}\sum_{a'} \Lambda(s,a',\theta,\iota) ) \]
+\subsubsection{The dueling architecture} \cite{wang2016dueling} decouples the state-value function $V(s)$ and the action-advantage function $A(s,a) = Q(s,a) - V(s)$, into a 1-dimensional value stream $V(s,\theta,\kappa)$ and an $|\mathcal{A}|$-dimensional advantage stream $A(s,a,\theta,\iota) \:\: \forall a \in \mathcal{A}$, with weights $(\theta,\kappa,\iota) = \Theta$. The streams are then recombined in a special aggregation layer to produce the $Q$-function with
+\[ Q(s,a,\Theta) = V(s,\theta,\kappa) + (A(s,a,\theta,\iota) - \frac{1}{|\mathcal{A}|}\sum_{a'} A(s,a',\theta,\iota) ) \]
 
 \subsubsection{The temporal difference} (TD) errors $\delta$ are computed from double TD targets \cite{hasselt2015deep} by forward propagation through the $Q$-network $Q$ and a target $Q$-network $\widehat{Q}$ with weights $\Theta^-$
 \[ \delta = r' + \gamma \cdot \widehat{Q}(s', arg \max_{a'} Q(s',a',\Theta), \Theta^-) - Q(s,a,\Theta)\]
 and the target $Q$-network $\widehat{Q}$ is updated by Polyak updates \cite{lillicrap2019continuous}
 \[ \Theta^- = (1 - \tau) \cdot \Theta^- + \tau \cdot \Theta \text{, with } \tau \ll 1\]
 
-\subsubsection{The replay memory} $D$ stores the $N$ last transitions, and the online $Q$-network $Q$ is updated by back propagation on a batch $U(D)$ of $M$ past transitions $(s,a,s',r')^{(m)}$ drawn uniformly at random from $D$, with Huber Loss over TD errors
+\subsubsection{The replay memory} $D$ stores the $N$ last transitions, and the online $Q$-network $Q$ is updated by back propagation on a batch $U(D)$ of $M$ past transitions $(s,a,s',r')_m$ drawn uniformly at random from $D$, with Huber Loss over TD errors
 \[ 
 L(\delta) = \frac{1}{2M}\sum_{m=1}^M
 \begin{cases}
-  (\delta^{(m)})^2 & \text{if } |\delta^{(m)}| < 1 \\
-  2 \cdot |\delta^{(m)}| - 1 & \text{else}
+  (\delta_m)^2 & \text{if } |\delta_m| < 1 \\
+  2 \cdot |\delta_m| - 1 & \text{else}
 \end{cases}
 \]
 and with Adam optimization \cite{kingma2017adam} on the derived gradient $\Delta$.
@@ -161,21 +161,21 @@ and with Adam optimization \cite{kingma2017adam} on the derived gradient $\Delta
     \STATE Initialize step $t = 0$;
     \STATE Initialize online dueling $Q$-network $Q$ with random weights $\Theta_0$ and target dueling $Q$-network $\widehat{Q}$ with weights $\Theta^-_0 = \Theta_0$; \\
     \STATE Initialize replay memory buffer $D$ to capacity $N$
-    \STATE with $Nmin$ random transitions $(s,\text{rand }a \in A,s',r')$;
+    \STATE with $Nmin$ random transitions $(s,\text{rand }a \in \mathcal{A},s',r')$;
     \FOR{episode e = 1:E}
         \bindent
         \STATE Initialize sequence, observe initial state $s_t=\phi(x_t)$;
         \WHILE{$s_t$ not terminal}
             \bindent
-            \STATE With probability $\epsilon$ select random action $a_t \in A$
+            \STATE With probability $\epsilon$ select random action $a_t \in \mathcal{A}$
             \STATE otherwise select action $a_t = arg\max_{a}Q(s_t,a,\Theta_t)$;
             \STATE Execute $a_t$ in emulator $\varepsilon$ and
             \STATE observe reward $r_{t+1}$ and next state $s_{t+1}=\phi(x_{t+1})$;
             \STATE Store transition $(s_t,a_t,s_{t+1},r_{t+1})$ in $D$;
-            \STATE Sample batch $U(D)$ of $M$ transitions $(s,a,s',r')^{(m)}$;
+            \STATE Sample batch $U(D)$ of $M$ transitions $(s,a,s',r')_m$;
             \FOR{m = 1:M}
                 \bindent
-                \STATE Set double TD error $\delta^{(m)}_t$;
+                \STATE Set double TD error $\delta_{m,t}$;
                 \eindent
             \ENDFOR
             \STATE Update online $Q$-network $Q$ with Adam optimization \\
@@ -201,7 +201,7 @@ Two types exists; either (1) the TSC agent acyclically selects the next phase fr
 The observations can either be macroscopic, with estimations of global parameters over traffic flows, or microscopic, with raw data for individual vehicles. While earlier work preferred low-dimensional macroscopic state representations, latest work observe individual vehicles for high-dimensional microscopic state representations. Indeed, a significant gain in performance has been measured for microscopic observations over macroscopic ones \cite{genders2018evaluating}. Either way, state representations have been usually found to be aggregations of multiple traffic features; among which current phase \cite{genders2019opensource,gao2017adaptative,wei2018intellilight,pol2016coordinated,wei2019presslight,wei2019colight,chen2020toward,zhang2020using,zhang2019partially}, number of vehicles \cite{genders2019opensource,wei2018intellilight,alemzadeh2020adaptative,wei2019colight,zhang2020using,zhang2019partially,genders2018evaluating}, positions of vehicles \cite{gao2017adaptative,liang2019deep,wei2018intellilight,vidali2019deep,pol2016coordinated,genders2018evaluating}, queue lengths \cite{genders2019opensource,li2016traffic,wei2018intellilight,genders2018evaluating,touhbi2017adaptative}, speeds of vehicles \cite{stevens2016reinforcement,gao2017adaptative,liang2019deep,genders2018evaluating}, history of past phases \cite{stevens2016reinforcement,alemzadeh2020adaptative,genders2018evaluating}, elapsed time in the current phase \cite{zhang2020using,zhang2019partially}, green, change and clearance intervals duration \cite{zhang2020using,zhang2019partially}, distances to nearest vehicles \cite{zhang2020using,zhang2019partially}, pressures \cite{wei2019presslight,chen2020toward}, number of waiting vehicles \cite{stevens2016reinforcement}, waiting times of vehicles \cite{wei2018intellilight}, and upcoming phase in a fixed cycle \cite{wei2018intellilight}. \\
 
 \subsubsection{Reward function}
-The reward in TSC, overall, aim at reducing total lost travel time caused by traffic signals. As such criterion can not be assessed directly, rewards are mostly defined as weighted combinations of traffic features, which coefficients are set empirically. The lack of solid theoretical justifications is a major challenge for real world deployment, as RL rewards are difficult to transcribe mathematically without distorting the intended goal, especially in complex systems. Here, the reward functions act in effect as punishments, and with agents reducing evaluation metrics derived from traffic features, i.e. maximizing negative values; among which delays of vehicles \cite{genders2019opensource,wei2018intellilight,pol2016coordinated,zhang2020using,zhang2019partially,genders2018evaluating,touhbi2017adaptative}, waiting times of vehicles \cite{gao2017adaptative,liang2019deep,wei2018intellilight,alemzadeh2020adaptative,pol2016coordinated}, queue lengths \cite{li2016traffic,wei2018intellilight,wei2019colight,touhbi2017adaptative}, intersection throughput \cite{stevens2016reinforcement,wei2018intellilight,alemzadeh2020adaptative,touhbi2017adaptative}, phase changes \cite{wei2018intellilight,alemzadeh2020adaptative,pol2016coordinated}, pressures \cite{wei2019presslight,chen2020toward}, accumulated waiting times of vehicles \cite{vidali2019deep}, number of waiting vehicles \cite{alemzadeh2020adaptative}, travel times of vehicles \cite{wei2018intellilight}, emergency stops  of vehicles \cite{pol2016coordinated}, and teleports of vehicles in SUMO \cite{pol2016coordinated}.
+The reward in TSC, overall, aims at reducing total lost travel time caused by traffic signals. As such criterion can not be assessed directly, rewards are mostly defined as weighted combinations of traffic features, which coefficients are set empirically. The lack of solid theoretical justifications is a major challenge for real world deployment, as RL rewards are difficult to transcribe mathematically without distorting the intended goal, especially in complex systems. Here, the reward functions act in effect as punishments, with agents reducing evaluation metrics derived from traffic features, maximizing negative values; among which delays of vehicles \cite{genders2019opensource,wei2018intellilight,pol2016coordinated,zhang2020using,zhang2019partially,genders2018evaluating,touhbi2017adaptative}, waiting times of vehicles \cite{gao2017adaptative,liang2019deep,wei2018intellilight,alemzadeh2020adaptative,pol2016coordinated}, queue lengths \cite{li2016traffic,wei2018intellilight,wei2019colight,touhbi2017adaptative}, intersection throughput \cite{stevens2016reinforcement,wei2018intellilight,alemzadeh2020adaptative,touhbi2017adaptative}, phase changes \cite{wei2018intellilight,alemzadeh2020adaptative,pol2016coordinated}, pressures \cite{wei2019presslight,chen2020toward}, accumulated waiting times of vehicles \cite{vidali2019deep}, number of waiting vehicles \cite{alemzadeh2020adaptative}, travel times of vehicles \cite{wei2018intellilight}, emergency stops  of vehicles \cite{pol2016coordinated}, and teleports of vehicles in SUMO \cite{pol2016coordinated}.
 
 % ============================
 \section{DQN model for TSC}
@@ -215,9 +215,8 @@ The agent selects the next phase from the set of possible phases for the next $T
 \\
 
 \subsubsection{Action space}
-The action space is defined by the number of possible phases in the traffic program. At a four-way intersection, there is a total of eight valid paired signal phases for non-conflicting movement signals \cite{wei2020survey}. From this, and as phases aim to separate conflicting connections so that concurrent movements have minimum conflicts, the set of possible phases has either two or four phases. 2-phases programs have two permissive green intervals, one for each axis, with permissive turn left, through and turn right movements. The action space is $A=\{(n\rightarrow esw,s\rightarrow wne),(e\rightarrow swn,w\rightarrow nes)\}$, with size $|A|=2$. 4-phases programs have four protected green intervals, two for each axis, with protected turn left movements only, or through and turn right movements. The action space is $A=\{(n\rightarrow sw,$ $s\rightarrow ne),(n\rightarrow e,s\rightarrow w),(e\rightarrow wn,w\rightarrow es),(e\rightarrow s,w\rightarrow n)\}$, with size $|A|=4$.
-
-The two possible action spaces are shown here in figure~\ref{fig:action_space}:
+The action space is defined by the number of possible phases in the traffic program. At a four-way intersection, there is a total of eight valid paired signal phases for non-conflicting movement signals \cite{wei2020survey}. From this, and as phases aim to separate conflicting connections so that concurrent movements have minimum conflicts, the set of possible phases has either two or four phases. 2-phases programs have two permissive green intervals, one for each axis, with permissive turn left, through and turn right movements. The action space is $\mathcal{A}=\{(n\rightarrow esw,s\rightarrow wne),(e\rightarrow swn,w\rightarrow nes)\}$, with size $|\mathcal{A}|=2$. 4-phases programs have four protected green intervals, two for each axis, with protected turn left movements only, or through and turn right movements. The action space is $\mathcal{A}=\{(n\rightarrow sw,$ $s\rightarrow ne),(n\rightarrow e,s\rightarrow w),(e\rightarrow wn,w\rightarrow es),(e\rightarrow s,w\rightarrow n)\}$, with size $|\mathcal{A}|=4$.
+The two possible action spaces are shown hereinafter in Fig.~\ref{fig:action_space}:
 
 \begin{figure}[htbp]
   \begin{center}
@@ -298,7 +297,7 @@ P =
     \label{fig:partial_dtse}
 \end{table}
 
-The example in figure~\ref{fig:partial_dtse} demonstrates partial DTSE applied to a four-way intersection, with CVs in blue and non-CVs in yellow. The matrix of CV positions $P$ is binary encoded, with 1 and 0 being respectively the presence or absence of CVs in the cells. The matrix of CV speeds $V$ encodes the matching speeds, normalized over the speed limits of approaches. The matrix of traffic signals over lanes $S$ is binary encoded, with 1 being a green signal for the lane and 0 a yellow or red signal.
+The example in Fig.~\ref{fig:partial_dtse} demonstrates partial DTSE applied to a four-way intersection, with CVs in blue and non-CVs in yellow. The matrix of CV positions $P$ is binary encoded, with 1 and 0 being respectively the presence or absence of CVs in the cells. The matrix of CV speeds $V$ encodes the matching speeds, normalized over the speed limits of approaches. The matrix of traffic signals over lanes $S$ is binary encoded, with 1 being a green signal for the lane and 0 a yellow or red signal.
 
 \subsection{Reward function}
 
@@ -313,9 +312,9 @@ Thus, minimizing the total delay is equivalent to minimizing, for each timestep 
 
 \[ d_i(t) = \frac{1}{v_{max}} \cdot ({v_{max}} - v_i(t)) = 1 - \frac{v_i(t)}{v_{max}} \]
 
-We propose here to minimize the total squared delay, the cumulative delay over all incoming vehicles at the intersection, with a power term that prioritizes fewer large delays over many short delays and thereby encourages fairness among vehicles:
+We propose here to minimize the total squared delay, the cumulative delay over all incoming vehicles at the intersection, with a power term that prioritizes many short delays over fewer large delays and thereby encourages fairness among vehicles:
 
-\[ tsd(t) = \sum_{i} (1 - (\frac{v_i(t)}{v_{max}})^2) \]
+\[ tsd(t) = \sum_{i} \left(1 - (\frac{v_i(t)}{v_{max}})^2 \right) \]
 
 The reward function thus maximizes the negative total squared delay. Additionally, the reward is normalized by the maximum total squared delay encountered at that time of training $tsd_{max}(t) = \max (tsd(t), tsd_{max}(t-1))$, and centered in $[0, 1]$ for learning stability \cite{genders2019opensource}, i.e. the TSC reward:
 
@@ -325,7 +324,7 @@ The reward function thus maximizes the negative total squared delay. Additionall
 
 The convolutional neural network (CNN) \cite{krizhevsky2012imagenet} is a special architecture for image analysis. It is split into a convolutional module, that assembles patterns of increasing complexity in data with space invariant operations, and a fully connected module. A convolutional layer in the convolutional module performs 2D-convolutions over shared weights of filters, i.e. kernels, sliding with a stride along stacked input feature matrices, i.e. channels, to output feature maps. It is defined by a number of channels $C$, a kernel size $K$ and a stride $S$.
 
-Here, partial DTSE is a 3-channels image-like state representation with cells acting as pixels, and we thus use a CNN for the deep $Q$-network, i.e. the convolutional dueling DQN. After experiments, we shaped the CNN to have two convolutional layers (2) $CNN1$ with $(C=16,K=4,S=2)$, (3) $CNN2$ with $(C=32,K=2,S=1)$, and two fully connected layers (4) $FC1$ with $128$ neurons and (5) $FC2$ with $64$ neurons; and all the activations are exponential linear unit (ELU) functions. With (1) the partial DTSE input layer, (6) the dueling stream layer and (7) the $Q$-value aggregation output layer, the convolutional dueling DQN is as in figure~\ref{fig:cnn_dueling}:
+Here, partial DTSE is a 3-channels image-like state representation with cells acting as pixels, and we thus use a CNN for the deep $Q$-network, i.e. the convolutional dueling DQN. After experiments, we shaped the CNN to have two convolutional layers (2) $CNN1$ with $(C=16,K=4,S=2)$, (3) $CNN2$ with $(C=32,K=2,S=1)$, and two fully connected layers (4) $FC1$ with $128$ neurons and (5) $FC2$ with $64$ neurons; and all the activations are exponential linear unit (ELU) functions. With (1) the partial DTSE input layer, (6) the dueling stream layer and (7) the $Q$-value aggregation output layer, the convolutional dueling DQN is as in Fig.~\ref{fig:cnn_dueling}:
 
 \begin{figure}[htbp]
   \begin{center}
@@ -371,7 +370,7 @@ We measure the performances by the average over an episode of the total delay at
 
 \subsection{Comparison algorithms}
 
-As there exist no standard algorithm for deep Q-learning TSC with partial detection, the performances of the model are evaluated in full detection against two actuated TSC (ATSC) algorithms: Max Pressure and SOTL. They are adaptive, non-learning TSC algorithms, responding to traffic flows in real time by measuring requests for green signals over the competing phases, according to fixed rules \cite{wei2020survey}. They rely on full, macroscopic traffic detection and are already deployed at many real intersections with inductive loops under the roads.
+As there exists no standard algorithm for deep Q-learning TSC with partial detection, the performances of the model are evaluated in full detection against two actuated TSC (ATSC) algorithms: Max Pressure and SOTL. They are adaptive, non-learning TSC algorithms, responding to traffic flows in real time by measuring requests for green signals over the competing phases, according to fixed rules \cite{wei2020survey}. They rely on full, macroscopic traffic detection and are already deployed at many real intersections with inductive loops under the roads.
 \\
 
 \subsubsection{Max Pressure} \cite{varaiya2013max, genders2019opensource} is an acyclic ATSC algorithm which minimizes the pressure of phases at an intersection. The pressure of a phase $p$ is defined as the difference between the total number of vehicles in the set of all incoming lanes with authorized movements for that phase $L_{p,inc}$ and the total number of vehicles in the set of all corresponding outgoing lanes $L_{p,out}$. After each minimum green interval of time $T_{g,min}$, the controller selects the phase $p \in P$ with maximum pressure to be relieved in the set of all possible phases. While Max Pressure is efficient and simple to implement, it involves detection on vehicles in both incoming and outgoing lanes and is thus costly to deploy. 
@@ -384,7 +383,7 @@ As there exist no standard algorithm for deep Q-learning TSC with partial detect
     \IF{$T_g \ge T_{g,min}$}
         \STATE Set next phase to maximum pressure phase
         \STATE $p = arg\max(\{pressure(p) \textbf{ for } p \in P\})$
-        \STATE with $pressure(p) = \sum_{l \in L_{p,inc}} |V_l| - \sum_{l \in L_{p,out}} |V_l|$;
+        \STATE with $pressure(p) = \sum_{l \in L_{p,inc}} |v_l| - \sum_{l \in L_{p,out}} |v_l|$;
     \ENDIF
 \end{algorithmic}
 \end{algorithm}
@@ -397,9 +396,9 @@ Here, we set the constants to values commonly used in the literature: $\mu = 50$
 \caption*{SOTL algorithm}
 \begin{algorithmic}
     \STATE \textbf{procedure} SOTL($T_g$,$T_{g,min}$,$\mu$,$\nu$,$\psi$,$\omega$):
-    \STATE Accumulate time integral $\chi = \chi + \sum_{l \in L_{inc} - L_{p,inc}} |V_{l,\psi}|$;
+    \STATE Accumulate time integral $\chi = \chi + \sum_{l \in L_{inc} - L_{p,inc}} |v_{l,\psi}|$;
     \IF{$T_g \ge T_{g,min} \textbf{ and } \chi > \mu$}
-        \STATE Set vehicle platoon size $\eta = \sum_{l \in L_{p,inc}} |V_{l,\omega}|$;
+        \STATE Set vehicle platoon size $\eta = \sum_{l \in L_{p,inc}} |v_{l,\omega}|$;
         \IF{$\eta \text{ null  }\textbf{ or } \eta > \nu$}
             \STATE Set $\chi = 0$;
             \STATE Set next phase to next phase in cycle $p \in P$;
@@ -440,7 +439,7 @@ Here, we set the constants to values commonly used in the literature: $\mu = 50$
 \begin{figure}[htbp]
   \begin{center}
     \includegraphics[width=1\linewidth,keepaspectratio]{img/results/pd_2.png}  
-    \caption{EMTD loss \% between DQN with FD and DQN with PD for all scenarios; by range of CV penetration rate.}
+    \caption{EMTD loss (\%) between DQN with FD and DQN with PD for all scenarios; by range of CV penetration rate.}
     \label{fig:pd_2}
   \end{center}
 \end{figure}
@@ -449,18 +448,18 @@ Here, we set the constants to values commonly used in the literature: $\mu = 50$
 
 We evaluate the performances of the model by EMTD over $3000$ hours of simulation, in a two-step comparative analysis.
 
-(1) We first assess the performances in full detection, by comparing DQN with FD to Max Pressure and SOTL. Figure~\ref{fig:fd_1} compares the density distributions by values and scenarios. Figure~\ref{fig:fd_2} compares the means and standard deviations by scenarios. (2) We then assess the performances in partial detection, by comparing DQN with PD to DQN with FD. 
-Figure~\ref{fig:pd_1} compares values between FD and PD by CV penetration rates and scenarios. Figure~\ref{fig:pd_2} estimates the average loss (\%) between FD and PD by scenarios and ranges of CV penetration rates.
+(1) We first assess the performances in full detection, by comparing DQN with FD to Max Pressure and SOTL. Fig.~\ref{fig:fd_1} compares the probability density functions by values and scenarios. Fig.~\ref{fig:fd_2} compares the means and standard deviations by scenarios. (2) We then assess the performances in partial detection, by comparing DQN with PD to DQN with FD. 
+Fig.~\ref{fig:pd_1} compares values between FD and PD by CV penetration rates and scenarios. Fig.~\ref{fig:pd_2} estimates the average loss between FD and PD by scenarios and ranges of CV penetration rates.
 
 \subsubsection{Full detection}
-From figures~\ref{fig:fd_1}~and~\ref{fig:fd_2}, DQN with FD performs better than the two ATSC algorithms in all scenarios. 
+From Fig.~\ref{fig:fd_1} and Fig.~\ref{fig:fd_2}, DQN with FD performs better than the two ATSC algorithms in all scenarios. 
 
 In scenario (a) with a 2-phases program, a small improvement is visible in the density distribution curve. The mean is slightly lower, with a standard deviation similar to those of Max Pressure and SOTL. We assume that this scenario is simple and does not allow for a relevant margin of progress and further optimization past actuated methods, and that the small size of the road network has led to over-saturation in many episodes with high demands. Nonetheless, performances are at least equivalent to ATSC, and this with cost-efficiency.
 
 In scenarios (b) and (c) with 4-phases programs, DQN with FD outperforms significantly Max Pressure and SOTL. While both means are strongly lower, the most notable results here are the differences in standard deviations, which are low for DQN with FD and high for the ATSC algorithms. This is confirmed in the density distribution curves, which form dense spikes concentrated around lower values for DQN with FD, while being spread out and flattened over wider ranges of values for both Max Pressure and SOTL. This implies that DQN with FD is more robust towards a great diversity of traffic situations than the actuated methods, for complex intersections with varying demands and 4-phases programs.\\
 
 \subsubsection{Partial detection}
-From figures~\ref{fig:pd_1}~and~\ref{fig:pd_2}, DQN with PD converges towards FD, as the CV penetration rate increases. 
+From Fig.~\ref{fig:pd_1} and Fig.\ref{fig:pd_2}, DQN with PD converges towards FD, as the CV penetration rate increases. 
 
 The performances in PD diverge strongly for CV penetration rates less than 10\%. They approach asymptotically the performances for FD for CV penetration rates from 10\% to 40\%, and the performances are quasi identical with CV penetration rates higher than 40\%, from DQN with PD to DQN with FD.
 
