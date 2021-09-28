@@ -383,7 +383,7 @@ As there exists no standard algorithm for deep Q-learning TSC with partial detec
     \IF{$T_g \ge T_{g,min}$}
         \STATE Set next phase to maximum pressure phase
         \STATE $p = arg\max(\{pressure(p) \textbf{ for } p \in P\})$
-        \STATE with $pressure(p) = \sum_{l \in L_{p,inc}} |v_l| - \sum_{l \in L_{p,out}} |v_l|$;
+        \STATE with $pressure(p) = \sum_{l \in L_{p,inc}} |V_l| - \sum_{l \in L_{p,out}} |V_l|$;
     \ENDIF
 \end{algorithmic}
 \end{algorithm}
@@ -396,9 +396,9 @@ Here, we set the constants to values commonly used in the literature: $\mu = 50$
 \caption*{SOTL algorithm}
 \begin{algorithmic}
     \STATE \textbf{procedure} SOTL($T_g$,$T_{g,min}$,$\mu$,$\nu$,$\psi$,$\omega$):
-    \STATE Accumulate time integral $\chi = \chi + \sum_{l \in L_{inc} - L_{p,inc}} |v_{l,\psi}|$;
+    \STATE Accumulate time integral $\chi = \chi + \sum_{l \in L_{inc} - L_{p,inc}} |V_{l,\psi}|$;
     \IF{$T_g \ge T_{g,min} \textbf{ and } \chi > \mu$}
-        \STATE Set vehicle platoon size $\eta = \sum_{l \in L_{p,inc}} |v_{l,\omega}|$;
+        \STATE Set vehicle platoon size $\eta = \sum_{l \in L_{p,inc}} |V_{l,\omega}|$;
         \IF{$\eta \text{ null  }\textbf{ or } \eta > \nu$}
             \STATE Set $\chi = 0$;
             \STATE Set next phase to next phase in cycle $p \in P$;
