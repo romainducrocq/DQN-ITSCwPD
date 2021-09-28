@@ -415,7 +415,7 @@ Here, we set the constants to values commonly used in the literature: $\mu = 50$
 \begin{figure}[htbp]
   \begin{center}
     \includegraphics[width=0.9\linewidth,keepaspectratio]{img/results/fd_1.png}  
-    \caption{EMTD density distributions for DQN with FD, Max Pressure and SOTL; by value, and by scenario.}
+    \caption{EMTD probability distributions for DQN with FD, Max Pressure and SOTL; by value, and by scenario.}
     \label{fig:fd_1}
   \end{center}
 \end{figure}
@@ -448,15 +448,15 @@ Here, we set the constants to values commonly used in the literature: $\mu = 50$
 
 We evaluate the performances of the model by EMTD over $3000$ hours of simulation, in a two-step comparative analysis.
 
-(1) We first assess the performances in full detection, by comparing DQN with FD to Max Pressure and SOTL. Fig.~\ref{fig:fd_1} compares the probability density functions by values and scenarios. Fig.~\ref{fig:fd_2} compares the means and standard deviations by scenarios. (2) We then assess the performances in partial detection, by comparing DQN with PD to DQN with FD. 
+(1) We first assess the performances in full detection, by comparing DQN with FD to Max Pressure and SOTL. Fig.~\ref{fig:fd_1} compares the probability distribution functions by values and scenarios. Fig.~\ref{fig:fd_2} compares the means and standard deviations by scenarios. (2) We then assess the performances in partial detection, by comparing DQN with PD to DQN with FD. 
 Fig.~\ref{fig:pd_1} compares values between FD and PD by CV penetration rates and scenarios. Fig.~\ref{fig:pd_2} estimates the average loss between FD and PD by scenarios and ranges of CV penetration rates.
 
 \subsubsection{Full detection}
 From Fig.~\ref{fig:fd_1} and Fig.~\ref{fig:fd_2}, DQN with FD performs better than the two ATSC algorithms in all scenarios. 
 
-In scenario (a) with a 2-phases program, a small improvement is visible in the density distribution curve. The mean is slightly lower, with a standard deviation similar to those of Max Pressure and SOTL. We assume that this scenario is simple and does not allow for a relevant margin of progress and further optimization past actuated methods, and that the small size of the road network has led to over-saturation in many episodes with high demands. Nonetheless, performances are at least equivalent to ATSC, and this with cost-efficiency.
+In scenario (a) with a 2-phases program, a small improvement is visible in the probability distribution curve. The mean is slightly lower, with a standard deviation similar to those of Max Pressure and SOTL. We assume that this scenario is simple and does not allow for a relevant margin of progress and further optimization past actuated methods, and that the small size of the road network has led to over-saturation in many episodes with high demands. Nonetheless, performances are at least equivalent to ATSC, and this with cost-efficiency.
 
-In scenarios (b) and (c) with 4-phases programs, DQN with FD outperforms significantly Max Pressure and SOTL. While both means are strongly lower, the most notable results here are the differences in standard deviations, which are low for DQN with FD and high for the ATSC algorithms. This is confirmed in the density distribution curves, which form dense spikes concentrated around lower values for DQN with FD, while being spread out and flattened over wider ranges of values for both Max Pressure and SOTL. This implies that DQN with FD is more robust towards a great diversity of traffic situations than the actuated methods, for complex intersections with varying demands and 4-phases programs.\\
+In scenarios (b) and (c) with 4-phases programs, DQN with FD outperforms significantly Max Pressure and SOTL. While both means are strongly lower, the most notable results here are the differences in standard deviations, which are low for DQN with FD and high for the ATSC algorithms. This is confirmed in the probability distribution curves, which form dense spikes concentrated around lower values for DQN with FD, while being spread out and flattened over wider ranges of values for both Max Pressure and SOTL. This implies that DQN with FD is more robust towards a great diversity of traffic situations than the actuated methods, for complex intersections with varying demands and 4-phases programs.\\
 
 \subsubsection{Partial detection}
 From Fig.~\ref{fig:pd_1} and Fig.\ref{fig:pd_2}, DQN with PD converges towards FD, as the CV penetration rate increases. 
