@@ -13,7 +13,7 @@
 \usepackage{multicol}
 \usepackage{multirow}
 \usepackage{placeins}
-\usepackage[linesnumbered,ruled]{algorithm2e}
+%\usepackage[linesnumbered,ruled]{algorithm2e}
 %\usepackage[bookmarks=false]{hyperref}
 \usepackage{hyperref}
 \usepackage{balance}
@@ -23,7 +23,9 @@
 %\graphicspath{{./../../}}
 
 \usepackage{xurl} % url 
-\usepackage{algorithm,algorithmic,algorithm2e} % algorithmic
+\usepackage{algorithm} 
+\usepackage{algorithmic}  
+\usepackage[algo2e]{algorithm2e} 
 \usepackage{siunitx}
 \sisetup{output-exponent-marker=\ensuremath{\mathrm{e}}} % scientific notation
 
@@ -124,7 +126,7 @@ We formulate the problem addressed hereinafter as follows: \\
 % ============================
 
 \subsection{Q-learning background}
-The RL agent in stochastic environment $\varepsilon$ faces a decision making problem formalized as a Markov Decision Process (MDP), and defined by the tuple $<\mathcal{S},\mathcal{A},\mathcal{P},\mathcal{R}>$, where $\mathcal{S}$ is the continuous state space with state $s \in \mathcal{S}$, $\mathcal{A}$ is the discrete action space with action $a \in \mathcal{A}$, $\mathcal{P}$ is the transition dynamics matrix with $p=\mathcal{P}(s'|s,a)$ the probability of transitioning to state $s'$ after taking action $a$ in state $s$, $\mathcal{R}$ is the reward function with $r'=\mathcal{R}(s,a,s')$ the reward of taking action $a$ in state $s$ and transitioning to state $s'$, and the transition is $(s,a,s',r')$.
+The RL agent in stochastic environment $\varepsilon$ faces a decision making problem formalized as a Markov Decision Process (MDP), and defined by the tuple $<S,A,P,R>$, where $S$ is the continuous state space with state $s \in S$, $A$ is the discrete action space with action $a \in A$, $P$ is the transition dynamics matrix with $p=P(s'|s,a)$ the probability of transitioning to state $s'$ after taking action $a$ in state $s$, $R$ is the reward function with $r'=R(s,a,s')$ the reward of taking action $a$ in state $s$ and transitioning to state $s'$, and the transition is $(s,a,s',r')$.
 
 The goal of learning in a MDP is to find a policy $\pi(s)$ mapping from states to actions, that maximizes the cumulative future reward $G_t = \sum_{k=t}^{t+T} \gamma^{(k-t)} \cdot r_{k+1} = r_{t+1} + \gamma \cdot G_{t+1}$, with $\gamma \in [0,1]$ a discount factor and a finite time horizon $T$.
     
@@ -135,10 +137,10 @@ Q-learning algorithms approximate the $Q$-function by many iterative updates, wi
 
 \subsection{3DQN implementation}
 
-Deep Q-learning algorithms approximate the $Q$-function with a neural network, the deep $Q$-network (DQN) \cite{hessel2017rainbow,mnih2013playing,mnih2015human} $Q$ with weights $\Theta$, mapping from one continuous state $s \in \mathcal{S}$ in an $|s|$-dimensional input layer to all the discrete $Q$-values $Q(s,a,\Theta) \:\: \forall a \in \mathcal{A}$ in an $|\mathcal{A}|$-dimensional output layer. Here, we implemented the dueling double DQN (3DQN) algorithm: \\
+Deep Q-learning algorithms approximate the $Q$-function with a neural network, the deep $Q$-network (DQN) \cite{hessel2017rainbow,mnih2013playing,mnih2015human} $Q$ with weights $\Theta$, mapping from one continuous state $s \in S$ in an $|s|$-dimensional input layer to all the discrete $Q$-values $Q(s,a,\Theta) \:\: \forall a \in A$ in an $|A|$-dimensional output layer. Here, we implemented the dueling double DQN (3DQN) algorithm: \\
 
-\subsubsection{The dueling architecture} \cite{wang2016dueling} decouples the state-value function $V(s)$ and the action-advantage function $A(s,a) = Q(s,a) - V(s)$, into a 1-dimensional value stream $V(s,\theta,\kappa)$ and an $|\mathcal{A}|$-dimensional advantage stream $A(s,a,\theta,\iota) \:\: \forall a \in \mathcal{A}$, with weights $(\theta,\kappa,\iota) = \Theta$. The streams are then recombined in a special aggregation layer to produce the $Q$-function with
-\[ Q(s,a,\Theta) = V(s,\theta,\kappa) + (A(s,a,\theta,\iota) - \frac{1}{|\mathcal{A}|}\sum_{a'} A(s,a',\theta,\iota) ) \]
+\subsubsection{The dueling architecture} \cite{wang2016dueling} decouples the state-value function $V(s)$ and the action-advantage function $\widehat{A}(s,a) = Q(s,a) - V(s)$, into a 1-dimensional value stream $V(s,\theta,\kappa)$ and an $|A|$-dimensional advantage stream $\widehat{A}(s,a,\theta,\iota) \:\: \forall a \in A$, with weights $(\theta,\kappa,\iota) = \Theta$. The streams are then recombined in a special aggregation layer to produce the $Q$-function with
+\[ Q(s,a,\Theta) = V(s,\theta,\kappa) + (\widehat{A}(s,a,\theta,\iota) - \frac{1}{|A|}\sum_{a'} \widehat{A}(s,a',\theta,\iota) ) \]
 
 \subsubsection{The temporal difference} (TD) errors $\delta$ are computed from double TD targets \cite{hasselt2015deep} by forward propagation through the $Q$-network $Q$ and a target $Q$-network $\widehat{Q}$ with weights $\Theta^-$
 \[ \delta = r' + \gamma \cdot \widehat{Q}(s', arg \max_{a'} Q(s',a',\Theta), \Theta^-) - Q(s,a,\Theta)\]
@@ -161,30 +163,30 @@ and with Adam optimization \cite{kingma2017adam} on the derived gradient $\Delta
     \STATE Initialize step $t = 0$;
     \STATE Initialize online dueling $Q$-network $Q$ with random weights $\Theta_0$ and target dueling $Q$-network $\widehat{Q}$ with weights $\Theta^-_0 = \Theta_0$; \\
     \STATE Initialize replay memory buffer $D$ to capacity $N$
-    \STATE with $Nmin$ random transitions $(s,\text{rand }a \in \mathcal{A},s',r')$;
+    \STATE with $Nmin$ random transitions $(s,\text{rand }a \in A,s',r')$;
     \FOR{episode e = 1:E}
-        \bindent
+        %\bindent
         \STATE Initialize sequence, observe initial state $s_t=\phi(x_t)$;
         \WHILE{$s_t$ not terminal}
-            \bindent
-            \STATE With probability $\epsilon$ select random action $a_t \in \mathcal{A}$
+            %\bindent
+            \STATE With probability $\epsilon$ select random action $a_t \in A$
             \STATE otherwise select action $a_t = arg\max_{a}Q(s_t,a,\Theta_t)$;
             \STATE Execute $a_t$ in emulator $\varepsilon$ and
             \STATE observe reward $r_{t+1}$ and next state $s_{t+1}=\phi(x_{t+1})$;
             \STATE Store transition $(s_t,a_t,s_{t+1},r_{t+1})$ in $D$;
             \STATE Sample batch $U(D)$ of $M$ transitions $(s,a,s',r')_m$;
             \FOR{m = 1:M}
-                \bindent
+                %\bindent
                 \STATE Set double TD error $\delta_m$;
-                \eindent
+                %\eindent
             \ENDFOR
             \STATE Update online $Q$-network $Q$ with Adam optimization \\
             on Huber loss $L_t$ w.r.t. weights $\Theta_t$ and gradient $\Delta_t$;
             \STATE Soft update target $Q$-network $\widehat{Q}$ with Polyak update;
             \STATE Decay $\epsilon$ with exponential decay, increment step $t$;
-            \eindent
+            %\eindent
         \ENDWHILE
-        \eindent
+        %\eindent
     \ENDFOR
 \end{algorithmic}
 \end{algorithm}
@@ -215,7 +217,7 @@ The agent selects the next phase from the set of possible phases for the next $T
 \\
 
 \subsubsection{Action space}
-The action space is defined by the number of possible phases in the traffic program. At a four-way intersection, there is a total of eight valid paired signal phases for non-conflicting movement signals \cite{wei2020survey}. From this, and as phases aim to separate conflicting connections so that concurrent movements have minimum conflicts, the set of possible phases has either two or four phases. 2-phases programs have two permissive green intervals, one for each axis, with permissive turn left, through and turn right movements. The action space is $\mathcal{A}=\{(n\rightarrow esw,s\rightarrow wne),(e\rightarrow swn,w\rightarrow nes)\}$, with size $|\mathcal{A}|=2$. 4-phases programs have four protected green intervals, two for each axis, with protected turn left movements only, or through and turn right movements. The action space is $\mathcal{A}=\{(n\rightarrow sw,$ $s\rightarrow ne),(n\rightarrow e,s\rightarrow w),(e\rightarrow wn,w\rightarrow es),(e\rightarrow s,w\rightarrow n)\}$, with size $|\mathcal{A}|=4$.
+The action space is defined by the number of possible phases in the traffic program. At a four-way intersection, there is a total of eight valid paired signal phases for non-conflicting movement signals \cite{wei2020survey}. From this, and as phases aim to separate conflicting connections so that concurrent movements have minimum conflicts, the set of possible phases has either two or four phases. 2-phases programs have two permissive green intervals, one for each axis, with permissive turn left, through and turn right movements. The action space is $A=\{(n\rightarrow esw,s\rightarrow wne),(e\rightarrow swn,w\rightarrow nes)\}$, with size $|A|=2$. 4-phases programs have four protected green intervals, two for each axis, with protected turn left movements only, or through and turn right movements. The action space is $A=\{(n\rightarrow sw,$ $s\rightarrow ne),(n\rightarrow e,s\rightarrow w),(e\rightarrow wn,w\rightarrow es),(e\rightarrow s,w\rightarrow n)\}$, with size $|A|=4$.
 The two possible action spaces are shown hereinafter in Fig.~\ref{fig:action_space}:
 
 \begin{figure}[htbp]
