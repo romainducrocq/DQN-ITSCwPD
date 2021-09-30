@@ -1,8 +1,10 @@
 ## DQN - Intelligent Traffic Signal Control with Partial Detection
 
+Arxiv: http://arxiv.org/abs/2109.14337 (Romain Ducrocq, Nadir Farhi)  
+
 ****
 
-Implemented from my DQN framework: https://github.com/romainducrocq/frameworQ
+Implemented from my DQN framework: https://github.com/romainducrocq/frameworQ  
 
 ****
 
