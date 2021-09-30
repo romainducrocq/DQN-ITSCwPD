@@ -47,7 +47,9 @@ class Agent(metaclass=ABCMeta):
         self.save_path = save_dir + path + '_' + 'model.pack'
         self.summary_writer = SummaryWriter(log_dir + path + '/')
 
-        self.device = T.device(("cuda:"+gpu) if T.cuda.is_available() else "cpu")
+        # TODO
+        # self.device = T.device(("cuda:"+gpu) if T.cuda.is_available() else "cpu")
+        self.device = T.device("cpu")
 
         self.start_time = time.time()
 
