@@ -47,9 +47,8 @@ class Agent(metaclass=ABCMeta):
         self.save_path = save_dir + path + '_' + 'model.pack'
         self.summary_writer = SummaryWriter(log_dir + path + '/')
 
-        # TODO
-        # self.device = T.device(("cuda:"+gpu) if T.cuda.is_available() else "cpu")
-        self.device = T.device("cpu")
+        self.device = T.device(("cuda:"+gpu) if T.cuda.is_available() else "cpu")
+        print("DEVICE", "=", self.device, "" if not T.cuda.is_available() else T.cuda.get_device_name(self.device))
 
         self.start_time = time.time()
 
@@ -261,7 +260,7 @@ class PerDoubleAgent(Agent):
         action_q_values = T.gather(input=online_q_values, dim=1, index=actions_t)
 
         with T.no_grad():
-            abs_td_errors_np = T.abs(targets - action_q_values).detach().numpy()
+            abs_td_errors_np = T.abs(targets - action_q_values).detach().cpu().numpy()
             self.replay_memory_buffer.update_batch_priorities(tree_indices, abs_td_errors_np)
 
         loss = T.mean(is_weights_t * self.online_network.loss(action_q_values, targets)).to(self.device)

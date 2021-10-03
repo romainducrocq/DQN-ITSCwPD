@@ -27,9 +27,7 @@ class Observe(View):
             "DuelingDoubleDQNAgent": "DuelingDeepQNetwork",
             "PerDuelingDoubleDQNAgent": "DuelingDeepQNetwork"
         }[model_pack.split('_lr')[0]])(
-            # TODO
-            # device(("cuda:" + args.gpu) if cuda.is_available() else "cpu"),
-            device("cpu"),
+            device(("cuda:" + args.gpu) if cuda.is_available() else "cpu"),
             float(model_pack.split('_lr')[1].split('_')[0]),
             network_config,
             self.env.observation_space,
