@@ -12,7 +12,7 @@ Implemented from my DQN framework: https://github.com/romainducrocq/DQN-framewor
 
 ### Build and Run
 
-`cd bin`
+`cd bin/`
 
 - Install with `./make.sh`
 ```
@@ -149,8 +149,6 @@ optional arguments:
   -log_dir LOG_DIR  Log directory
   -player PLAYER    Player
 ```
-
-### Install
 
 ****
 
