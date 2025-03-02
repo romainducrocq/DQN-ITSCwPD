@@ -1,19 +1,11 @@
 #!/usr/bin/bash
 
-function run () {
-
 ALGO="SotlBaseline"
 
-python3 play.py -player $ALGO
-
-}
-
-cd ..
+cd ../
 
 source venv/bin/activate
-
-run
-
+python3 play.py -player $ALGO
 deactivate
 
 exit
