@@ -128,9 +128,10 @@ optional arguments:
 usage: visualize.sh [-h] [--logdir PATH]
 
 VISUALIZE
-
-  --logdir PATH         Directory where TensorBoard will look to find
-                        structure rooted at logdir, looking for .*tfevents.*
+optional arguments:
+  -h, --help        show this help message and exit
+  --logdir PATH     Directory where TensorBoard will look to find
+                    structure rooted at logdir, looking for .*tfevents.*
 ```
   
 - Play another algorithm with `./play.sh [<args>]`
