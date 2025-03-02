@@ -14,8 +14,10 @@ Implemented from my DQN framework: https://github.com/romainducrocq/DQN-framewor
 
 `cd bin/`
 
-- Install with `./make.sh`
+- Install with `sudo ./make.sh` or
 ```
+cd ../
+
 # Get dependencies
 
 sudo apt-get update
