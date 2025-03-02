@@ -3,7 +3,11 @@
 cd ../
 
 source venv/bin/activate
-tensorboard --logdir ./logs/train/
+if [ -z "${1}" ]; then
+    tensorboard --logdir ./logs/train/
+else
+    tensorboard "${@}"
+fi
 deactivate
 
 exit

@@ -3,7 +3,11 @@
 cd ../
 
 source venv/bin/activate
-python3 train.py -algo DuelingDoubleDQNAgent -max_total_steps 4000000
+if [ -z "${1}" ]; then
+    python3 train.py -algo DuelingDoubleDQNAgent -max_total_steps 4000000
+else
+    python3 train.py "${@}"
+fi
 deactivate
 
 exit
