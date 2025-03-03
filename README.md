@@ -2,7 +2,7 @@
 
 Article: https://link.springer.com/article/10.1007/s13177-023-00346-4  
 Arxiv: http://arxiv.org/abs/2109.14337  
-Authors: Romain Ducrocq, Nadir Farhi  
+Authors: Romain Ducrocq, Nadir Farhi - IFSTTAR, France  
 
 ****
 
